@@ -1,8 +1,9 @@
-# FAPK-cjs
-aqui se desarrolla la aplicacion para cjs technology utilizando tecnologia flet
+# A fapk-cjs Flet app
 
-FLET 
+An example of a minimal Flet app.
 
-SQLITE
+To run the app:
 
-
+```
+flet run [app_directory]
+```
