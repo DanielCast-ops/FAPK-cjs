@@ -1,8 +1,40 @@
-import flet as ft
+#!/usr/bin/env python3
 
+import flet as ft
+from Paginas import login
 
 def main(page: ft.Page):
-    page.add(ft.SafeArea(ft.Text("Hello, Flet!")))
+    page.title = "Gestión de la Aplicación"
+    page.theme_mode = ft.ThemeMode.LIGHT
 
+    # Aqui pongo una funcion para manejar la navegación entre páginas
+    def route_change(route):
+        page.views.clear()
+        if page.route == "/":
+            page.views.append(home.home_view(page))
+        elif page.route == "/users":
+            page.views.append(users.users_view(page))
+        elif page.route == "/inventario":
+            page.views.append(inventario.inventario_view(page))
+        elif page.route == "/servicios":
+            page.views.append(servicios.servicios_view(page))
+        elif page.route == "/login":
+            page.views.append(login.Vista_login(page))  # Página de login
+        page.update()
 
-ft.app(main)
+    # y aqui una función para regresar a la página anterior
+    def go_back(e):
+        if len(page.views) > 1:
+            page.views.pop()
+            top_view = page.views[-1]
+            page.go(top_view.route)
+
+    page.on_route_change = route_change
+    page.on_view_pop = go_back
+
+    # Definir la ruta inicial como el login
+    page.go("/login")
+
+# Correr la app
+ft.app(target=main)
+

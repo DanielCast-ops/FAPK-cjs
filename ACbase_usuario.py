@@ -4,9 +4,9 @@ import bcrypt
 class base_usuario:
     def __init__(self, db_name="usuarios.db"):
         # aqui se conecta  la base de datos con python
-        self.conn = sqlite3.connect(db_name)
+        self.conn = sqlite3.connect(db_name, check_same_thread=False)
         self.cursor = self.conn.cursor()
-        self.create_table()
+        self.crear_tabla()
 
     def crear_tabla(self):
         # aqui se crean las tablas necesarias

@@ -30,7 +30,7 @@ def Vista_login(page):
             ft.Text("Iniciar Sesión", size=30),
             username_input,
             password_input,
-            ft.ElevatedButton("Login", on_click=handle_login),
+            ft.ElevatedButton("Login", on_click=login_logica),
             message
         ]
     )
