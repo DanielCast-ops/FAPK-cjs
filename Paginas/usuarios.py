@@ -1,11 +1,11 @@
 import flet as ft
 from Controladores_bases.ACbase_usuario import base_usuario
 
-# aqui se instancia la base de datos
+# Aqui se instancia la base de datos
 db = base_usuario()
 
 def mostrar_usuarios(page):
-    # aqui se definen los componentes iniciales
+    # Aqui se definen los componentes iniciales
     user_list = ft.ListView(expand=True, spacing=10)
     username_input = ft.TextField(label="Nombre de usuario")
     password_input = ft.TextField(label="Contraseña", password=True, can_reveal_password=True)
@@ -14,26 +14,26 @@ def mostrar_usuarios(page):
     # Aqui cargamos la base de datos
     def cargar_usuarios():
         user_list.controls.clear()
-        usuarios = db.listar_usuarios()  # aqui se obtienen los usuarios de la base de datos
+        usuarios = db.listar_usuarios()  # Aqui se obtienen los usuarios de la base de datos
         for usuario in usuarios:
-            #aqui la funcion para que muestre la opcion de elimiar el usuario o borrarlo
+            # Aqui la funcion para que muestre la opcion de eliminar el usuario o borrarlo
             user_list.controls.append(
                 ft.Row(
                     [
                         ft.Text(f"ID: {usuario[0]}"),
                         ft.Text(f"Nombre: {usuario[1]}"),
-                        ft.IconButton(ft.icons.EDIT, on_click=lambda e, usuario=usuario: ediar_usuario(usaurio)),
-                        ft.IconButton(ft.icons.DELETE, on_click=lambda e, usaurio=usuario: borrar_usuario(usuario[1]))
+                        ft.IconButton(ft.icons.EDIT, on_click=lambda e, usuario=usuario: editar_usuario(usuario)),
+                        ft.IconButton(ft.icons.DELETE, on_click=lambda e, usuario=usuario: borrar_usuario(usuario[1]))
                     ]
                 )
             )
         page.update()
 
-    # Aqui pongo la funcion para crear un nuevo usuario.
+    # Aqui pongo la funcion para crear un nuevo usuario
     def agregar_usuario(e):
         username = username_input.value
         password = password_input.value
-        if db.registrar_usuario(username , password):
+        if db.registrar_usuario(username, password):
             message.value = "Usuario registrado exitosamente."
             cargar_usuarios()  # Recargar la lista de usuarios
         else:
@@ -42,12 +42,12 @@ def mostrar_usuarios(page):
         password_input.value = ""
         page.update()
 
-    # Aqui la funcion para editar el usuario.
+    # Aqui la funcion para editar el usuario
     def editar_usuario(user):
         username_input.value = user[1]  # Rellenar el campo con el nombre de usuario existente
         password_input.value = ""
 
-        # aqui para actualziar el password
+        # Aqui para actualizar el password
         def actualizar_usuario(e):
             new_password = password_input.value
             if db.actualizar_usuario(user[1], new_password):
@@ -59,9 +59,17 @@ def mostrar_usuarios(page):
             cargar_usuarios()  # Recargar la lista de usuarios
             page.update()
 
-        # Aqui se cambia el boton par actualizar
-        page.controls[-2].controls[1] = ft.ElevatedButton("Actualizar Usuario", on_click=update_user)
-        page.update()
+            # Verificar que page.controls tiene al menos dos elementos y que el penúltimo elemento tiene al menos dos subcontroles
+        if len(page.controls) >= 2 and len(page.controls[-2].controls) > 1:
+            page.controls[-2].controls[1] = ft.ElevatedButton("Actualizar Usuario", actualizar_usuario)
+        else:
+             # Si no hay suficientes elementos, añade el botón de actualización en un nuevo lugar adecuado
+            if len(page.controls) > 1:
+                page.controls[-1] = ft.ElevatedButton("Actualizar Usuario", actualizar_usuario)
+            else:
+                 # en esta parte valida si no hay suficientes controles, añade el botón de actualización en un nuevo Row
+                page.controls.append(ft.Row([ft.ElevatedButton("Actualizar Usuario", actualizar_usuario)]))
+            page.update()
 
     # En esta parte esta la funcion para borrar el usuario
     def borrar_usuario(username):
@@ -85,7 +93,7 @@ def mostrar_usuarios(page):
             password_input,
             ft.Row(
                 [
-                    ft.ElevatedButton("Agregar Usuario", on_click=agregar_usuario),  # Botón para agregar usuario
+                    ft.ElevatedButton("Agregar usuario", on_click=agregar_usuario),  # Botón para agregar usuario
                 ],
                 alignment=ft.MainAxisAlignment.START,
             ),
@@ -93,4 +101,3 @@ def mostrar_usuarios(page):
             ft.ElevatedButton("Regresar", on_click=lambda _: page.go("/")),  # Botón para volver a la página principal
         ]
     )
-
