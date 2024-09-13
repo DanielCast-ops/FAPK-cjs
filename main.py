@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import flet as ft
-from Paginas import login
+from Paginas import login, usuarios
 
 def main(page: ft.Page):
     page.title = "Gestión de la Aplicación"
@@ -12,8 +12,8 @@ def main(page: ft.Page):
         page.views.clear()
         if page.route == "/":
             page.views.append(home.home_view(page))
-        elif page.route == "/users":
-            page.views.append(users.users_view(page))
+        elif page.route == "/usuarios":
+            page.views.append(usuarios.mostrar_usuarios(page))
         elif page.route == "/inventario":
             page.views.append(inventario.inventario_view(page))
         elif page.route == "/servicios":
@@ -33,7 +33,7 @@ def main(page: ft.Page):
     page.on_view_pop = go_back
 
     # Definir la ruta inicial como el login
-    page.go("/login")
+    page.go("/usuarios")
 
 # Correr la app
 ft.app(target=main)

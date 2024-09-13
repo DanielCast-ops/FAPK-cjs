@@ -1,5 +1,5 @@
 import flet as ft
-from ACbase_usuario import base_usuario
+from Controladores_bases.ACbase_usuario import base_usuario
 
 # Aqui instancio la base de datos, le doy un nombre mas corto para gestionarlo mejor
 

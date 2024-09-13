@@ -53,8 +53,12 @@ class base_usuario:
         self.cursor.execute("DELETE FROM users WHERE username=?", (username,))
         self.conn.commit()
         return self.cursor.rowcount > 0
+        
+    def listar_usuarios(self):
+        # aqui una funcion para que se listen todos los usuarios
+        self.cursor.execute("SELECT id, username FROM users")
+        return self.cursor.fetchall()
 
     def cerrar_c_base_usuarios(self):
         # Cerrar la conexión a la base de datos
         self.conn.close()
-
