@@ -11,6 +11,8 @@ def mostrar_usuarios(page):
     password_input = ft.TextField(label="Contraseña", password=True, can_reveal_password=True)
     message = ft.Text()
 
+    boton = ft.ElevatedButton("Agregar usuario", on_click=None) #agrego una variable para que el boton sea interactivo
+    usuario_actual = None #almacenamos el usuario actual
     # Aqui cargamos la base de datos
     def cargar_usuarios():
         user_list.controls.clear()
@@ -44,32 +46,34 @@ def mostrar_usuarios(page):
 
     # Aqui la funcion para editar el usuario
     def editar_usuario(user):
-        username_input.value = user[1]  # Rellenar el campo con el nombre de usuario existente
-        password_input.value = ""
+        nonlocal usuario_actual
+        usuario_actual = user  # guardamos el usuario que se está editando
+        username_input.value = user[1]  # en esta parte se llena el campo con el nombre de usuario existente
+        password_input.value = ""  # se limpia el campo de contraseña
+
+        # aqui cambiamos el boton a "Actualizar usuario"
+        boton.text = "Actualizar usuario"
+        boton.on_click = actualizar_usuario
+        page.update()
 
         # Aqui para actualizar el password
-        def actualizar_usuario(e):
-            new_password = password_input.value
-            if db.actualizar_usuario(user[1], new_password):
-                message.value = "Usuario actualizado exitosamente."
-            else:
-                message.value = "Error al actualizar el usuario."
-            username_input.value = ""
-            password_input.value = ""
-            cargar_usuarios()  # Recargar la lista de usuarios
-            page.update()
-
-            # Verificar que page.controls tiene al menos dos elementos y que el penúltimo elemento tiene al menos dos subcontroles
-        if len(page.controls) >= 2 and len(page.controls[-2].controls) > 1:
-            page.controls[-2].controls[1] = ft.ElevatedButton("Actualizar Usuario", actualizar_usuario)
+    def actualizar_usuario(e):
+        nonlocal usuario_actual
+        new_password = password_input.value
+        if usuario_actual and db.actualizar_usuario(usuario_actual[1], new_password):
+            message.value = "Usuario actualizado exitosamente."
         else:
-             # Si no hay suficientes elementos, añade el botón de actualización en un nuevo lugar adecuado
-            if len(page.controls) > 1:
-                page.controls[-1] = ft.ElevatedButton("Actualizar Usuario", actualizar_usuario)
-            else:
-                 # en esta parte valida si no hay suficientes controles, añade el botón de actualización en un nuevo Row
-                page.controls.append(ft.Row([ft.ElevatedButton("Actualizar Usuario", actualizar_usuario)]))
-            page.update()
+            message.value = "Error al actualizar el usuario."
+        username_input.value = ""
+        password_input.value = ""
+        usuario_actual = None  # aqui se limpia el estado del usuario que se está editando
+
+        # en esta parte cambiamos el botón de nuevo a "Agregar usuario"
+        boton.text = "Agregar usuario"
+        boton.on_click = agregar_usuario
+        cargar_usuarios()  # Recargamos la lista de usuarios
+        page.update()
+
 
     # En esta parte esta la funcion para borrar el usuario
     def borrar_usuario(username):
@@ -93,7 +97,7 @@ def mostrar_usuarios(page):
             password_input,
             ft.Row(
                 [
-                    ft.ElevatedButton("Agregar usuario", on_click=agregar_usuario),  # Botón para agregar usuario
+                    boton,  # Botón variable
                 ],
                 alignment=ft.MainAxisAlignment.START,
             ),
