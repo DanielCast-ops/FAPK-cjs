@@ -3,54 +3,50 @@
 import flet as ft
 from Controladores_bases.Controlador import Inventario, Articulo
 
-def mostrar_inventario(db):
+def mostrar_inventario(page, db):  # Asegúrate de recibir el 'page' como argumento
     # Instancio el controlador
     inventario_controller = Inventario(db)
     articulo_controller = Articulo(db)
 
-    # Una funcion para obtener el inventario actual
+    # Una función para obtener el inventario actual
     def obtener_inventario():
-    inventario_controller = Inventario(db)  # Asegúrate de usar la ruta correcta
-    inventario_list = inventario_controller.obtener_todos_los_movimientos()
+        inventario_list = inventario_controller.obtener_todos_los_movimientos()
 
-    # Ahora también obtendremos las cantidades de los artículos
-    articulos = []  # Lista para almacenar los artículos y sus cantidades
-    articulo_controller = Articulo(db)
+        articulos = []  # Lista para almacenar los artículos y sus cantidades
+        for transaccion in inventario_list:
+            cantidad = inventario_controller.obtener_cantidad_articulo(transaccion['id_articulo'])
+            articulo = articulo_controller.obtener_articulo(transaccion['id_articulo'])
+            if articulo:  # Solo si el artículo existe
+                articulos.append({
+                    'id_transaccion': transaccion['id_transaccion'],
+                    'nombre': articulo['nombre'],
+                    'especificacion': articulo['especificacion'],
+                    'cantidad': cantidad,
+                    'fecha': transaccion['fecha'],
+                    'notas': transaccion['notas'],
+                })
 
-    for transaccion in inventario_list:
-        cantidad = inventario_controller.obtener_cantidad_articulo(transaccion['id_articulo'])
-        articulo = articulo_controller.obtener_articulo(transaccion['id_articulo'])
-        if articulo:  # Solo si el artículo existe
-            articulos.append({
-                'id_transaccion': transaccion['id_transaccion'],
-                'nombre': articulo['nombre'],
-                'especificacion': articulo['especificacion'],
-                'cantidad': cantidad,
-                'fecha': transaccion['fecha'],
-                'notas': transaccion['notas'],
-            })
+        return articulos
 
-    return articulos
-    # Aqui una tabla para incertar los datos.
+    # Aquí una tabla para insertar los datos.
     def generar_tabla_inventario():
         filas = []
         for transaccion in obtener_inventario():
-            articulo = transaccion["articulo"]
             fila = ft.DataRow(
                 cells=[
-                    ft.DataCell(ft.Text(articulo["nombre"])),
-                    ft.DataCell(ft.Text(articulo["especificacion"])),
+                    ft.DataCell(ft.Text(transaccion["nombre"])),
+                    ft.DataCell(ft.Text(transaccion["especificacion"])),
                     ft.DataCell(ft.Text(str(transaccion["cantidad"]))),
                     ft.DataCell(ft.Text(transaccion["fecha"])),
                     ft.DataCell(ft.Text(transaccion["notas"] if transaccion["notas"] else "")),
-                    ft.DataCell(ft.IconButton(icon=ft.icons.EDIT, on_click=lambda e: actualizar_articulo(transaccion["id"]))),
-                    ft.DataCell(ft.IconButton(icon=ft.icons.DELETE, on_click=lambda e: eliminar_articulo(transaccion["id"])))
+                    ft.DataCell(ft.IconButton(icon=ft.icons.EDIT, on_click=lambda e: actualizar_articulo(transaccion["id_transaccion"]))),
+                    ft.DataCell(ft.IconButton(icon=ft.icons.DELETE, on_click=lambda e: eliminar_articulo(transaccion["id_transaccion"])))
                 ]
             )
             filas.append(fila)
         return filas
 
-    # Aqui una funcion  para registrar un nuevo movimiento
+    # Aquí una función para registrar un nuevo movimiento
     def registrar_movimiento(e):
         id_articulo = articulo_dropdown.value
         cantidad = int(cantidad_input.value)
@@ -58,26 +54,26 @@ def mostrar_inventario(db):
         inventario_controller.crear_transaccion(id_articulo, 1, cantidad, "2024-09-26", notas)
         actualizar_tabla()
 
-    #  aqui debe ir la funcion  para actualizar el inventario
+    # Aquí debe ir la función para actualizar el inventario
     def actualizar_articulo(id_transaccion):
-        # revisar la logica para actualizar un movimiento existente
+        # Revisar la lógica para actualizar un movimiento existente
         pass
 
-    # Funcion para eliminar un registro de inventario
+    # Función para eliminar un registro de inventario
     def eliminar_articulo(id_transaccion):
         inventario_controller.eliminar_transaccion(id_transaccion)
         actualizar_tabla()
 
-    # funcion para actualizar la tabla de inventario
+    # Función para actualizar la tabla de inventario
     def actualizar_tabla():
         tabla_contenido.rows = generar_tabla_inventario()
         page.update()
 
-    # presentacion de la pagina
-        articulo_dropdown = ft.Dropdown(
-        options=[ft.DropdownOption(text=articulo['nombre'], value=articulo['id_articulo'])
-                 for articulo in articulo_controller.obtener_todos_los_articulos()]
-    )
+    # Presentación de la página
+
+    articulo_dropdown = ft.Dropdown(
+    options=[ft.dropdown.Option(text=articulo['nombre'], data=articulo['id_articulo'])
+             for articulo in articulo_controller.obtener_todos_los_articulos()])
 
     cantidad_input = ft.TextField(label="Cantidad")
     notas_input = ft.TextField(label="Notas (opcional)")
@@ -97,7 +93,8 @@ def mostrar_inventario(db):
         rows=generar_tabla_inventario()
     )
 
-    page = ft.Column(
+    # Combinamos todo en una columna
+    return ft.Column(
         controls=[
             ft.Text("Gestión de Inventario", style="headlineMedium"),
             articulo_dropdown,
@@ -107,6 +104,4 @@ def mostrar_inventario(db):
             tabla_contenido
         ]
     )
-
-    return page
 

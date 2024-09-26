@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import flet as ft
-from Paginas import login, usuarios, inventario
+from Paginas import login, usuarios, inventario, articulos
 from Controladores_bases.Cbase_principal import crear_base
 
 def main(page: ft.Page):
@@ -16,7 +16,9 @@ def main(page: ft.Page):
         elif page.route == "/usuarios":
             page.views.append(usuarios.mostrar_usuarios(page))
         elif page.route == "/inventario":
-            page.views.append(inventario.mostrar_inventario(page))
+            page.views.append(inventario.mostrar_inventario(page, "cjs.db"))
+        elif page.route == "/articulos":
+            page.views.append(articulos.registrar_articulo(page))
         elif page.route == "/servicios":
             page.views.append(servicios.servicios_view(page))
         elif page.route == "/login":
