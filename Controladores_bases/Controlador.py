@@ -180,6 +180,11 @@ class Articulo:
         consulta = 'DELETE FROM articulos WHERE id_articulo = ?'
         self.base_de_datos.ejecutar_sentencia(consulta, (id_articulo,))
 
+    def obtener_todos_los_articulos(self): #creo la clase para obtener todos los articulos
+        consulta = 'SELECT * FROM articulos'
+        resultados = self.base_de_datos.ejecutar_consulta(consulta)
+        return [{'id_articulo': r[0], 'nombre': r[1], 'especificacion': r[2], 'id_proveedor': r[3]} for r in resultados]
+
     def cerrar_conexion(self):
         self.base_de_datos.cerrar_conexion()
 
@@ -208,6 +213,16 @@ class Inventario:
     def eliminar_transaccion(self, id_transaccion):
         consulta = 'DELETE FROM inventario WHERE id_transaccion = ?'
         self.base_de_datos.ejecutar_sentencia(consulta, (id_transaccion,))
+
+    def obtener_cantidad_articulo(self, id_articulo): #se agrega una funcion para saber la cantidad real de un determinado articulo
+        consulta = 'SELECT SUM(cantidad) FROM inventario WHERE id_articulo = ?'
+        resultado = self.base_de_datos.ejecutar_consulta(consulta, (id_articulo,))
+        return resultado[0][0] if resultado[0][0] is not None else 0
+
+    def obtener_todos_los_movimientos(self): #incerto este otro metodo facilitar la consulta de todo el inventario
+        consulta = 'SELECT * FROM inventario'
+        resultados = self.base_de_datos.ejecutar_consulta(consulta)
+        return [{'id_transaccion': r[0], 'id_articulo': r[1], 'id_personal': r[2], 'cantidad': r[3], 'fecha': r[4], 'notas': r[5]} for r in resultados]
 
     def cerrar_conexion(self):
         self.base_de_datos.cerrar_conexion()

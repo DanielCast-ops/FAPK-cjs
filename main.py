@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
 import flet as ft
-from Paginas import login, usuarios
+from Paginas import login, usuarios, inventario
+from Controladores_bases.Cbase_principal import crear_base
 
 def main(page: ft.Page):
     page.title = "Gestión de la Aplicación"
     page.theme_mode = ft.ThemeMode.LIGHT
-
+    crear_base('cjs.db')
     # Aqui pongo una funcion para manejar la navegación entre páginas
     def route_change(route):
         page.views.clear()
@@ -15,7 +16,7 @@ def main(page: ft.Page):
         elif page.route == "/usuarios":
             page.views.append(usuarios.mostrar_usuarios(page))
         elif page.route == "/inventario":
-            page.views.append(inventario.inventario_view(page))
+            page.views.append(inventario.mostrar_inventario(page))
         elif page.route == "/servicios":
             page.views.append(servicios.servicios_view(page))
         elif page.route == "/login":
@@ -33,7 +34,7 @@ def main(page: ft.Page):
     page.on_view_pop = go_back
 
     # Definir la ruta inicial como el login
-    page.go("/usuarios")
+    page.go("/inventario")
 
 # Correr la app
 ft.app(target=main)
