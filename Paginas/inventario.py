@@ -3,16 +3,15 @@
 import flet as ft
 from Controladores_bases.Controlador import Inventario, Articulo
 
-def mostrar_inventario(page, db):  # Asegúrate de recibir el 'page' como argumento
-    # Instancio el controlador
+
+def mostrar_inventario(page, db):
     inventario_controller = Inventario(db)
     articulo_controller = Articulo(db)
 
-    # Una función para obtener el inventario actual
     def obtener_inventario():
+        # Obtener el inventario actual desde la base de datos
         inventario_list = inventario_controller.obtener_todos_los_movimientos()
-
-        articulos = []  # Lista para almacenar los artículos y sus cantidades
+        articulos = []
         for transaccion in inventario_list:
             cantidad = inventario_controller.obtener_cantidad_articulo(transaccion['id_articulo'])
             articulo = articulo_controller.obtener_articulo(transaccion['id_articulo'])
@@ -25,13 +24,13 @@ def mostrar_inventario(page, db):  # Asegúrate de recibir el 'page' como argume
                     'fecha': transaccion['fecha'],
                     'notas': transaccion['notas'],
                 })
-
+        print(f"Inventario obtenido: {articulos}")  # Mensaje de depuración
         return articulos
 
-    # Aquí una tabla para insertar los datos.
     def generar_tabla_inventario():
         filas = []
-        for transaccion in obtener_inventario():
+        articulos = obtener_inventario()  # Asegúrate de obtener datos actualizados
+        for transaccion in articulos:
             fila = ft.DataRow(
                 cells=[
                     ft.DataCell(ft.Text(transaccion["nombre"])),
@@ -46,41 +45,43 @@ def mostrar_inventario(page, db):  # Asegúrate de recibir el 'page' como argume
             filas.append(fila)
         return filas
 
-    # Aquí una función para registrar un nuevo movimiento
     def registrar_movimiento(e):
-        id_articulo = articulo_dropdown.value
-        cantidad = int(cantidad_input.value)
-        notas = notas_input.value
-        inventario_controller.crear_transaccion(id_articulo, 1, cantidad, "2024-09-26", notas)
-        actualizar_tabla()
+        try:
+            id_articulo = articulo_dropdown.value
+            cantidad = int(cantidad_input.value)
+            notas = notas_input.value
 
-    # Aquí debe ir la función para actualizar el inventario
+            if not id_articulo or cantidad <= 0:
+                print("Error: El artículo no es válido o la cantidad es menor o igual a cero.")
+                return
+
+            inventario_controller.crear_transaccion(id_articulo, 1, cantidad, "2024-09-26", notas)
+            print("Movimiento registrado con éxito.")  # Mensaje de depuración
+            actualizar_tabla()
+        except Exception as ex:
+            print(f"Error al registrar movimiento: {ex}")
+
     def actualizar_articulo(id_transaccion):
-        # Revisar la lógica para actualizar un movimiento existente
-        pass
+        pass  # Implementar lógica de actualización
 
-    # Función para eliminar un registro de inventario
     def eliminar_articulo(id_transaccion):
         inventario_controller.eliminar_transaccion(id_transaccion)
         actualizar_tabla()
 
-    # Función para actualizar la tabla de inventario
     def actualizar_tabla():
         tabla_contenido.rows = generar_tabla_inventario()
+        print(f"Tabla actualizada con filas: {tabla_contenido.rows}")  # Mensaje de depuración
         page.update()
 
-    # Presentación de la página
-
     articulo_dropdown = ft.Dropdown(
-    options=[ft.dropdown.Option(text=articulo['nombre'], data=articulo['id_articulo'])
-             for articulo in articulo_controller.obtener_todos_los_articulos()])
+        options=[ft.dropdown.Option(text=articulo['nombre'], data=articulo['id_articulo'])
+                 for articulo in articulo_controller.obtener_todos_los_articulos()]
+    )
 
     cantidad_input = ft.TextField(label="Cantidad")
     notas_input = ft.TextField(label="Notas (opcional)")
-
     registrar_button = ft.ElevatedButton(text="Registrar Movimiento", on_click=registrar_movimiento)
 
-    # Layout de la página
     tabla_contenido = ft.DataTable(
         columns=[
             ft.DataColumn(label=ft.Text("Artículo")),
@@ -93,7 +94,6 @@ def mostrar_inventario(page, db):  # Asegúrate de recibir el 'page' como argume
         rows=generar_tabla_inventario()
     )
 
-    # Combinamos todo en una columna
     return ft.Column(
         controls=[
             ft.Text("Gestión de Inventario", style="headlineMedium"),
