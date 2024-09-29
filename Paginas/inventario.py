@@ -9,12 +9,13 @@ def mostrar_inventario(page, db):
     articulo_controller = Articulo(db)
 
     def obtener_inventario():
-        # Obtener el inventario actual desde la base de datos
+        # Aqui obtengo  el inventario actual desde la base de datos
         inventario_list = inventario_controller.obtener_todos_los_movimientos()
         articulos = []
         for transaccion in inventario_list:
             cantidad = inventario_controller.obtener_cantidad_articulo(transaccion['id_articulo'])
-            articulo = articulo_controller.obtener_articulo(transaccion['id_articulo'])
+            articulo = articulo_controller.obtener_articulo_por_nombre(transaccion['id_articulo'])
+            #print(f"cantidad {cantidad} articulo: {articulo}")
             if articulo:  # Solo si el artículo existe
                 articulos.append({
                     'id_transaccion': transaccion['id_transaccion'],
@@ -24,12 +25,12 @@ def mostrar_inventario(page, db):
                     'fecha': transaccion['fecha'],
                     'notas': transaccion['notas'],
                 })
-        print(f"Inventario obtenido: {articulos}")  # Mensaje de depuración
+        print(f"Inventario obtenido: {articulos}")  #Este es un mensaje de depuracion.
         return articulos
 
     def generar_tabla_inventario():
         filas = []
-        articulos = obtener_inventario()  # Asegúrate de obtener datos actualizados
+        articulos = obtener_inventario()  # aqui se obtienen los datos actualizados para las columnas
         for transaccion in articulos:
             fila = ft.DataRow(
                 cells=[
@@ -56,7 +57,7 @@ def mostrar_inventario(page, db):
                 return
 
             inventario_controller.crear_transaccion(id_articulo, 1, cantidad, "2024-09-26", notas)
-            print("Movimiento registrado con éxito.")  # Mensaje de depuración
+            print("Movimiento registrado con éxito.") mensaje de depuracion
             actualizar_tabla()
         except Exception as ex:
             print(f"Error al registrar movimiento: {ex}")

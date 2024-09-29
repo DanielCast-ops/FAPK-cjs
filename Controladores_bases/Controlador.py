@@ -171,6 +171,13 @@ class Articulo:
             return {'id_articulo': resultado[0][0], 'nombre': resultado[0][1], 'especificacion': resultado[0][2], 'id_proveedor': resultado[0][3]}
         else:
             return None
+    def obtener_articulo_por_nombre(self, nombre_articulo):
+        consulta = 'SELECT * FROM articulos WHERE nombre = ?'
+        resultado = self.base_de_datos.ejecutar_consulta(consulta, (nombre_articulo,))
+        if resultado:
+            return {'id_articulo': resultado[0][0], 'nombre': resultado[0][1], 'especificacion': resultado[0][2], 'id_proveedor': resultado[0][3]}
+        else:
+            return None
 
     def actualizar_articulo(self, id_articulo, nuevo_nombre, nueva_especificacion, nuevo_id_proveedor):
         consulta = 'UPDATE articulos SET nombre = ?, especificacion = ?, id_proveedor = ? WHERE id_articulo = ?'
