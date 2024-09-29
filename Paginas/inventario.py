@@ -35,7 +35,6 @@ def mostrar_inventario(page, db):
             fila = ft.DataRow(
                 cells=[
                     ft.DataCell(ft.Text(transaccion["nombre"])),
-                    ft.DataCell(ft.Text(transaccion["especificacion"])),
                     ft.DataCell(ft.Text(str(transaccion["cantidad"]))),
                     ft.DataCell(ft.Text(transaccion["fecha"])),
                     ft.DataCell(ft.Text(transaccion["notas"] if transaccion["notas"] else "")),
@@ -57,7 +56,7 @@ def mostrar_inventario(page, db):
                 return
 
             inventario_controller.crear_transaccion(id_articulo, 1, cantidad, "2024-09-26", notas)
-            print("Movimiento registrado con éxito.") mensaje de depuracion
+            print("Movimiento registrado con éxito.")# mensaje de depuracion
             actualizar_tabla()
         except Exception as ex:
             print(f"Error al registrar movimiento: {ex}")
@@ -86,11 +85,11 @@ def mostrar_inventario(page, db):
     tabla_contenido = ft.DataTable(
         columns=[
             ft.DataColumn(label=ft.Text("Artículo")),
-            ft.DataColumn(label=ft.Text("Especificación")),
             ft.DataColumn(label=ft.Text("Cantidad")),
             ft.DataColumn(label=ft.Text("Fecha")),
             ft.DataColumn(label=ft.Text("Notas")),
-            ft.DataColumn(label=ft.Text("Acciones"))
+            ft.DataColumn(label=ft.Text("Acciones")),
+            ft.DataColumn(label=ft.Text("Acciones2"))
         ],
         rows=generar_tabla_inventario()
     )
