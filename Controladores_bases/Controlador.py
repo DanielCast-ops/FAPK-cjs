@@ -227,7 +227,7 @@ class Inventario:
         return resultado[0][0] if resultado[0][0] is not None else 0
 
     def obtener_todos_los_movimientos(self): #incerto este otro metodo facilitar la consulta de todo el inventario
-        consulta = 'SELECT * FROM inventario'
+        consulta = 'SELECT * FROM inventario ORDER BY id_transaccion DESC'
         resultados = self.base_de_datos.ejecutar_consulta(consulta)
         return [{'id_transaccion': r[0], 'id_articulo': r[1], 'id_personal': r[2], 'cantidad': r[3], 'fecha': r[4], 'notas': r[5]} for r in resultados]
 

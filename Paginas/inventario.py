@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import flet as ft
+from datetime import datetime
 from Controladores_bases.Controlador import Inventario, Articulo
 
 
@@ -9,15 +10,12 @@ def mostrar_inventario(page, db):
     articulo_controller = Articulo(db)
 
     def obtener_inventario():
-        # Aqui obtengo  el inventario actual desde la base de datos
         inventario_list = inventario_controller.obtener_todos_los_movimientos()
         articulos = []
-        #print(f"{inventario_list}") # depuracion de la obtencion de datos de la base
+        #print(f"{inventario_list}")  # Espacio para depurar la obtencion del inventario
         for transaccion in inventario_list:
-           #cantidad = inventario_controller.obtener_cantidad_articulo(transaccion['id_articulo'])
             articulo = articulo_controller.obtener_articulo_por_nombre(transaccion['id_articulo'])
-            #print(f"cantidad {cantidad} articulo: {articulo}")
-            if articulo:  # Solo si el artículo existe
+            if articulo:  # condicional para ejecutar solo si existe
                 articulos.append({
                     'id_transaccion': transaccion['id_transaccion'],
                     'nombre': articulo['nombre'],
@@ -26,12 +24,11 @@ def mostrar_inventario(page, db):
                     'fecha': transaccion['fecha'],
                     'notas': transaccion['notas'],
                 })
-        #print(f"Inventario obtenido: {articulos}")  #Este es un mensaje de depuracion.
         return articulos
 
     def generar_tabla_inventario():
         filas = []
-        articulos = obtener_inventario()  # aqui se obtienen los datos actualizados para las columnas
+        articulos = obtener_inventario()
         for transaccion in articulos:
             fila = ft.DataRow(
                 cells=[
@@ -39,8 +36,8 @@ def mostrar_inventario(page, db):
                     ft.DataCell(ft.Text(str(transaccion["cantidad"]))),
                     ft.DataCell(ft.Text(transaccion["fecha"])),
                     ft.DataCell(ft.Text(transaccion["notas"] if transaccion["notas"] else "")),
-                    ft.DataCell(ft.IconButton(icon=ft.icons.EDIT, on_click=lambda e: actualizar_articulo(transaccion["id_transaccion"]))),
-                    ft.DataCell(ft.IconButton(icon=ft.icons.DELETE, on_click=lambda e: eliminar_articulo(transaccion["id_transaccion"])))
+                    ft.DataCell(ft.IconButton(icon=ft.icons.EDIT, on_click=lambda e, id_transaccion=transaccion["id_transaccion"]: actualizar_articulo(id_transaccion))),
+                    ft.DataCell(ft.IconButton(icon=ft.icons.DELETE, on_click=lambda e, id_transaccion=transaccion["id_transaccion"]: eliminar_articulo(id_transaccion)))  # Se modifica la captura de los datos
                 ]
             )
             filas.append(fila)
@@ -56,22 +53,30 @@ def mostrar_inventario(page, db):
                 print("Error: El artículo no es válido o la cantidad es menor o igual a cero.")
                 return
 
-            inventario_controller.crear_transaccion(id_articulo, 1, cantidad, "2024-09-26", notas)
-            print("Movimiento registrado con éxito.")# mensaje de depuracion
+            fecha_actual = datetime.now().strftime("%Y-%m-%d")
+            inventario_controller.crear_transaccion(id_articulo, 1, cantidad, fecha_actual, notas)
+            #print("Movimiento registrado con éxito.")
             actualizar_tabla()
+
         except Exception as ex:
             print(f"Error al registrar movimiento: {ex}")
 
     def actualizar_articulo(id_transaccion):
-        pass  # Implementar lógica de actualización
+        # queda pendiente implementar logica aqui
+        print(f"Actualizar artículo con ID: {id_transaccion}")
 
     def eliminar_articulo(id_transaccion):
-        inventario_controller.eliminar_transaccion(id_transaccion)
-        actualizar_tabla()
+        try:
+            # en esta parte se elimina la transaccion
+            inventario_controller.eliminar_transaccion(id_transaccion)
+           # print(f"Transacción {id_transaccion} eliminada con éxito.")
+            actualizar_tabla()  # se actualiza la tabla
+        except Exception as ex:
+            print(f"Error al eliminar la transacción: {ex}")
 
     def actualizar_tabla():
         tabla_contenido.rows = generar_tabla_inventario()
-        print(f"Tabla actualizada con filas: {tabla_contenido.rows}")  # Mensaje de depuración
+        #print(f"Tabla actualizada con filas: {tabla_contenido.rows}")  # mensaje de depuracion para la actualizacion de la tabla
         page.update()
 
     articulo_dropdown = ft.Dropdown(
@@ -95,14 +100,14 @@ def mostrar_inventario(page, db):
         rows=generar_tabla_inventario()
     )
 
-    # Aqui creo un contenedor con scroll para la tabla ya que son muchos items
+    # aqui esta el contenedor con el scroll para la tabla
     contenedor_scroll = ft.Column(
         controls=[tabla_contenido],
-        height=300,  # altura del contenedor
-        scroll="auto"  # activar scroll
+        height=300,  # Altura del contenedor
+        scroll="auto"  # Activar scroll
     )
 
-    # aqui se retorna la interfaz principal
+    # aqui esta la interface principal
     return ft.Column(
         controls=[
             ft.Text("Gestión de Inventario", style="headlineMedium"),
@@ -110,6 +115,7 @@ def mostrar_inventario(page, db):
             cantidad_input,
             notas_input,
             registrar_button,
-            contenedor_scroll  # aqui va el contenedor con scroll para la tabla
+            contenedor_scroll  # Contenedor con scroll para la tabla
         ]
     )
+
