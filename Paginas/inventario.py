@@ -85,16 +85,24 @@ def mostrar_inventario(page, db):
 
     tabla_contenido = ft.DataTable(
         columns=[
-            ft.DataColumn(label=ft.Text("Artículo")),
-            ft.DataColumn(label=ft.Text("Cantidad")),
-            ft.DataColumn(label=ft.Text("Fecha")),
-            ft.DataColumn(label=ft.Text("Notas")),
-            ft.DataColumn(label=ft.Text("Acciones")),
-            ft.DataColumn(label=ft.Text("Acciones2"))
+            ft.DataColumn(ft.Text("Artículo")),
+            ft.DataColumn(ft.Text("Cantidad")),
+            ft.DataColumn(ft.Text("Fecha")),
+            ft.DataColumn(ft.Text("Notas")),
+            ft.DataColumn(ft.Text("Acciones")),
+            ft.DataColumn(ft.Text("Acciones2"))
         ],
         rows=generar_tabla_inventario()
     )
 
+    # Aqui creo un contenedor con scroll para la tabla ya que son muchos items
+    contenedor_scroll = ft.Column(
+        controls=[tabla_contenido],
+        height=300,  # altura del contenedor
+        scroll="auto"  # activar scroll
+    )
+
+    # aqui se retorna la interfaz principal
     return ft.Column(
         controls=[
             ft.Text("Gestión de Inventario", style="headlineMedium"),
@@ -102,7 +110,6 @@ def mostrar_inventario(page, db):
             cantidad_input,
             notas_input,
             registrar_button,
-            tabla_contenido
+            contenedor_scroll  # aqui va el contenedor con scroll para la tabla
         ]
     )
-
