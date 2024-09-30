@@ -12,8 +12,9 @@ def mostrar_inventario(page, db):
         # Aqui obtengo  el inventario actual desde la base de datos
         inventario_list = inventario_controller.obtener_todos_los_movimientos()
         articulos = []
+        #print(f"{inventario_list}") # depuracion de la obtencion de datos de la base
         for transaccion in inventario_list:
-            cantidad = inventario_controller.obtener_cantidad_articulo(transaccion['id_articulo'])
+           #cantidad = inventario_controller.obtener_cantidad_articulo(transaccion['id_articulo'])
             articulo = articulo_controller.obtener_articulo_por_nombre(transaccion['id_articulo'])
             #print(f"cantidad {cantidad} articulo: {articulo}")
             if articulo:  # Solo si el artículo existe
@@ -21,11 +22,11 @@ def mostrar_inventario(page, db):
                     'id_transaccion': transaccion['id_transaccion'],
                     'nombre': articulo['nombre'],
                     'especificacion': articulo['especificacion'],
-                    'cantidad': cantidad,
+                    'cantidad': transaccion['cantidad'],
                     'fecha': transaccion['fecha'],
                     'notas': transaccion['notas'],
                 })
-        print(f"Inventario obtenido: {articulos}")  #Este es un mensaje de depuracion.
+        #print(f"Inventario obtenido: {articulos}")  #Este es un mensaje de depuracion.
         return articulos
 
     def generar_tabla_inventario():
