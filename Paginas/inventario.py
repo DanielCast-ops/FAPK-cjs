@@ -4,6 +4,7 @@ import flet as ft
 from datetime import datetime
 from Controladores_bases.Controlador import Inventario, Articulo
 
+transaccion_seleccionada = None
 
 def mostrar_inventario(page, db):
     inventario_controller = Inventario(db)
@@ -62,12 +63,57 @@ def mostrar_inventario(page, db):
             print(f"Error al registrar movimiento: {ex}")
 
     def actualizar_articulo(id_transaccion):
-        # queda pendiente implementar logica aqui
-        print(f"Actualizar artículo con ID: {id_transaccion}")
+        global transaccion_seleccionada
+        # se carga la transaccion actual como un factor global
+        transaccion_seleccionada = inventario_controller.obtener_transaccion(id_transaccion)
+        if transaccion_seleccionada:
+            articulo_dropdown.value = transaccion_seleccionada['id_articulo']
+            cantidad_input.value = str(transaccion_seleccionada['cantidad'])  # convertimos el valor
+            notas_input.value = transaccion_seleccionada['notas'] if transaccion_seleccionada['notas'] else ""
+            guardar_button.visible = True  #aqui se muestra el boton de guardar
+            registrar_button.visible = False  # al mismo tiempo que se oculta el de registrar
+            page.update()
+
+    def guardar_cambios(e):
+        global transaccion_seleccionada  # usamos la transaccion almacenada
+        try:
+            if transaccion_seleccionada:  # validamos la transaccion
+                id_articulo = articulo_dropdown.value
+                cantidad = int(cantidad_input.value)
+                notas = notas_input.value
+
+                if not id_articulo or cantidad <= 0:
+                    print("Error: El artículo no es válido o la cantidad es menor o igual a cero.")
+                    return
+
+            # en esta parte actualizo la transaccion
+                inventario_controller.actualizar_transaccion(
+                    transaccion_seleccionada['id_transaccion'],  # usamos la id de la transacción seleccionada
+                    id_articulo,
+                    1,  # esto es un id de personal provisional puede ser dinamico
+                    cantidad,
+                    transaccion_seleccionada['fecha'],  # mantenemos la fecha original
+                    notas
+                )
+                #print(f"Transacción {transaccion_seleccionada['id_transaccion']} actualizada con éxito.")#mensaje para depurar
+                actualizar_tabla()
+                limpiar_formulario()
+
+        except Exception as ex:
+            print(f"Error al actualizar la transacción: {ex}")
+
+    def limpiar_formulario():  #creo una funcion para que se limpie el formulario
+        articulo_dropdown.value = None
+        cantidad_input.value = ""
+        notas_input.value = ""
+        guardar_button.visible = False
+        registrar_button.visible = True
+        page.update()
+
 
     def eliminar_articulo(id_transaccion):
         try:
-            # en esta parte se elimina la transaccion
+            # en esta parte eliminamos la transaccion
             inventario_controller.eliminar_transaccion(id_transaccion)
            # print(f"Transacción {id_transaccion} eliminada con éxito.")
             actualizar_tabla()  # se actualiza la tabla
@@ -87,6 +133,7 @@ def mostrar_inventario(page, db):
     cantidad_input = ft.TextField(label="Cantidad")
     notas_input = ft.TextField(label="Notas (opcional)")
     registrar_button = ft.ElevatedButton(text="Registrar Movimiento", on_click=registrar_movimiento)
+    guardar_button = ft.ElevatedButton(text="Guardar Cambios", on_click=guardar_cambios, visible=False)
 
     tabla_contenido = ft.DataTable(
         columns=[
@@ -115,6 +162,7 @@ def mostrar_inventario(page, db):
             cantidad_input,
             notas_input,
             registrar_button,
+            guardar_button,
             contenedor_scroll  # Contenedor con scroll para la tabla
         ]
     )
