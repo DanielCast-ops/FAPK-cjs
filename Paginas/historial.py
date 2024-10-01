@@ -141,8 +141,8 @@ def mostrar_inventario(page, db):
             ft.DataColumn(ft.Text("Cantidad")),
             ft.DataColumn(ft.Text("Fecha")),
             ft.DataColumn(ft.Text("Notas")),
-            ft.DataColumn(ft.Text("Acciones")),
-            ft.DataColumn(ft.Text("Acciones2"))
+            ft.DataColumn(ft.Text("Editar")),
+            ft.DataColumn(ft.Text("Eliminar"))
         ],
         rows=generar_tabla_inventario()
     )
@@ -157,7 +157,7 @@ def mostrar_inventario(page, db):
     # aqui esta la interface principal
     return ft.Column(
         controls=[
-            ft.Text("Gestión de Inventario", style="headlineMedium"),
+            ft.Text("Historial de Inventario", style="headlineMedium"),
             articulo_dropdown,
             cantidad_input,
             notas_input,
