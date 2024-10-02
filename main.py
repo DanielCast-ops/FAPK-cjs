@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import flet as ft
-from Paginas import login, usuarios, historial, articulos
+from Paginas import login, usuarios, historial, articulos, inventario
 from Controladores_bases.Cbase_principal import crear_base
 
 def main(page: ft.Page):
@@ -18,7 +18,7 @@ def main(page: ft.Page):
         elif page.route == "/historial":
             page.views.append(historial.mostrar_inventario(page, "cjs.db"))
         elif page.route == "/inventario":
-            page.views.append(inventario.mostrar_inventario(page, "cjs.db"))
+            page.views.append(inventario.mostrar_inventario(page))
         elif page.route == "/articulos":
             page.views.append(articulos.registrar_articulo(page))
         elif page.route == "/servicios":
@@ -38,7 +38,7 @@ def main(page: ft.Page):
     page.on_view_pop = go_back
 
     # Definir la ruta inicial como el login
-    page.go("/historial")
+    page.go("/inventario")
 
 # Correr la app
 ft.app(target=main)
