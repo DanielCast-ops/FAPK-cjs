@@ -38,7 +38,7 @@ def main(page: ft.Page):
     page.on_view_pop = go_back
 
     # Definir la ruta inicial como el login
-    page.go("/historial")
+    page.go("/articulos")
 
 # Correr la app
 ft.app(target=main)
