@@ -38,15 +38,25 @@ def registrar_articulo(page):
     def generar_tabla_articulos():
         filas = []
         articulos = obtener_articulos()
+        #print(f"articulos obtenidos: {articulos}")
         for articulo in articulos:
             fila = ft.DataRow(
                 cells=[
                     ft.DataCell(ft.Text(articulo['nombre'])),
-                    ft.DataCell(ft.Text(articulo['especificacion']))
+                    ft.DataCell(ft.Text(articulo['especificacion'])),
+                    ft.DataCell(ft.IconButton(icon=ft.icons.DELETE, on_click=lambda e, id_articulo=articulo["id_articulo"]:eliminar_articulo(id_articulo)))
                 ]
             )
             filas.append(fila)
         return filas
+
+    def eliminar_articulo(id_articulo):
+        try:
+             articulo_controller.eliminar_articulo(id_articulo)
+             # print(f"Transacción {id_transaccion} eliminada con éxito.")
+             actualizar_tabla()
+        except Exception as ex:
+             print(f"Error al eliminar el articulo: {ex}")
 
     # aqui la de actualizar la tabla
     def actualizar_tabla():
@@ -61,6 +71,7 @@ def registrar_articulo(page):
         columns=[
             ft.DataColumn(ft.Text("Nombre")),
             ft.DataColumn(ft.Text("Especificación")),
+            ft.DataColumn(ft.Text("Eliminar")),
         ],
         rows=generar_tabla_articulos()  # Llena
     )

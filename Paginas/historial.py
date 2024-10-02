@@ -50,7 +50,7 @@ def mostrar_inventario(page, db):
             cantidad = int(cantidad_input.value)
             notas = notas_input.value
 
-            if not id_articulo or cantidad <= 0:
+            if not id_articulo or cantidad == 0:
                 print("Error: El artículo no es válido o la cantidad es menor o igual a cero.")
                 return
 
