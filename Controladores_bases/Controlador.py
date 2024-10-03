@@ -293,6 +293,18 @@ class EstadoServicio:
             return {'id_estado': resultado[0][0], 'descripcion': resultado[0][1]}
         else:
             return None
+        #adiciono la funcion para obtener todos los estados
+    def obtener_todos_los_estados(self):
+        consulta = 'SELECT * FROM estado_servicio'
+        resultado = self.base_de_datos.ejecutar_consulta(consulta)
+        estados_servicio = []
+        for estado in resultado:
+            estados_servicio.append({
+                'id_estado': estado[0],
+                'descripcion': estado[1]
+            })
+        return estados_servicio
+
 
     def actualizar_estado_servicio(self, id_estado, nueva_descripcion):
         consulta = 'UPDATE estado_servicio SET descripcion = ? WHERE id_estado = ?'
