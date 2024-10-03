@@ -240,9 +240,9 @@ class Servicio:
     def __init__(self, nombredb):
         self.base_de_datos = base_de_datos(nombredb)
 
-    def crear_servicio(self, nombre, fecha, telefono_extra, cliente_id, id_personal):
-        consulta = 'INSERT INTO servicios (nombre, fecha, telefono_extra, cliente_id, id_personal) VALUES (?, ?, ?, ?, ?)'
-        return self.base_de_datos.ejecutar_sentencia(consulta, (nombre, fecha, telefono_extra, cliente_id, id_personal))
+    def crear_servicio(self, nombre, fecha, telefono_extra, cliente_id, personal_id):
+        consulta = 'INSERT INTO servicios (nombre, fecha, telefono_extra, cliente_id, personal_id) VALUES (?, ?, ?, ?, ?)'
+        return self.base_de_datos.ejecutar_sentencia(consulta, (nombre, fecha, telefono_extra, cliente_id, personal_id))
 
     def obtener_servicio(self, id_servicio):
         consulta = 'SELECT * FROM servicios WHERE id_servicio = ?'
@@ -259,6 +259,21 @@ class Servicio:
     def eliminar_servicio(self, id_servicio):
         consulta = 'DELETE FROM servicios WHERE id_servicio = ?'
         self.base_de_datos.ejecutar_sentencia(consulta, (id_servicio,))
+
+    def obtener_todos_los_servicios(self):
+        consulta = 'SELECT * FROM servicios'
+        resultado = self.base_de_datos.ejecutar_consulta(consulta)
+        servicios = []
+        for servicio in resultado:
+            servicios.append({
+                'id_servicio': servicio[0],
+                'nombre': servicio[1],
+                'fecha': servicio[2],
+                'telefono_extra': servicio[3],
+                'cliente_id': servicio[4],
+                'id_personal': servicio[5]
+            })
+        return servicios
 
     def cerrar_conexion(self):
         self.base_de_datos.cerrar_conexion()
