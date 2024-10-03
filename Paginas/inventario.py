@@ -15,8 +15,9 @@ def mostrar_inventario(page):
     def obtener_inventario_total():
         articulos = articulo_controller.obtener_todos_los_articulos()
         resumen = []
+        #print(f"listado de articulos {articulos}")#depuracion
         for articulo in articulos:
-            cantidad_total = inventario_controller.obtener_cantidad_articulo(articulo['id_articulo'])
+            cantidad_total = inventario_controller.obtener_cantidad_articulo(articulo['nombre'])
             resumen.append({
                 'nombre': articulo['nombre'],
                 'cantidad': cantidad_total,
@@ -53,7 +54,7 @@ def mostrar_inventario(page):
     # aqui los botones de navegacion
     boton_principal = ft.ElevatedButton("Página Principal", on_click=lambda _: page.go("/"))
     boton_agregar = ft.IconButton(icon=ft.icons.ADD, on_click=lambda _: page.go("/articulos"))
-    boton_historial = ft.IconButton(icon=ft.icons.HISTORY, on_click=lambda _: page.go("/historico"))
+    boton_historial = ft.IconButton(icon=ft.icons.HISTORY, on_click=lambda _: page.go("/historial"))
 
     # esta es la tabla de resumen del inventario
     tabla_contenido = ft.DataTable(
