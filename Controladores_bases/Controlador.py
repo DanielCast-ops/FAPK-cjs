@@ -56,6 +56,11 @@ class Cargo:
         else:
             return None
 
+    def obtener_todos_los_cargos(self):
+        consulta = 'SELECT * FROM cargos'
+        resultados = self.base_de_datos.ejecutar_consulta(consulta)
+        return [{'id_cargo': r[0], 'cargo': r[1]} for r in resultados]
+
     def actualizar_cargo(self, id_cargo, nuevo_cargo):
         consulta = 'UPDATE cargos SET cargo = ? WHERE id_cargo = ?'
         self.base_de_datos.realizar_sentencia(consulta, (nuevo_cargo, id_cargo))
@@ -84,6 +89,11 @@ class Cliente:
             return {'id_cliente': resultado[0][0], 'nombre': resultado[0][1], 'telefono': resultado[0][2]}
         else:
             return None
+
+    def obtener_todos_los_clientes(self):
+        consulta = 'SELECT * FROM clientes'
+        resultados = self.base_de_datos.ejecutar_consulta(consulta)
+        return [{'id_cliente': r[0], 'nombre': r[1], 'telefono': r[2]} for r in resultados]
 
     def actualizar_cliente(self, id_cliente, nuevo_nombre, nuevo_telefono):
         consulta = 'UPDATE clientes SET nombre = ?, telefono = ? WHERE id_cliente = ?'
@@ -114,6 +124,11 @@ class Proveedor:
         else:
             return None
 
+    def obtener_todos_los_proveedores(self):
+        consulta = 'SELECT * FROM proveedores'
+        resultados = self.base_de_datos.ejecutar_consulta(consulta)
+        return [{'id_proveedor': r[0], 'nombre': r[1], 'telefono': r[2], 'tipo_de_productos': r[3]} for r in resultados]
+
     def actualizar_proveedor(self, id_proveedor, nuevo_nombre, nuevo_telefono, nuevo_tipo_de_productos):
         consulta = 'UPDATE proveedores SET nombre = ?, telefono = ?, tipo_de_productos = ? WHERE id_proveedor = ?'
         self.base_de_datos.ejecutar_sentencia(consulta, (nuevo_nombre, nuevo_telefono, nuevo_tipo_de_productos, id_proveedor))
@@ -142,6 +157,11 @@ class Empleado:
             return {'id_personal': resultado[0][0], 'nombre': resultado[0][1], 'id_cargo': resultado[0][2], 'telefono': resultado[0][3]}
         else:
             return None
+
+    def obtener_todos_los_empleados(self):
+        consulta = 'SELECT * FROM empleados'
+        resultados = self.base_de_datos.ejecutar_consulta(consulta)
+        return [{'id_personal': r[0], 'nombre': r[1], 'id_cargo': r[2], 'telefono': r[3]} for r in resultados]
 
     def actualizar_empleado(self, id_personal, nuevo_nombre, nuevo_id_cargo, nuevo_telefono):
         consulta = 'UPDATE empleados SET nombre = ?, id_cargo = ?, telefono = ? WHERE id_personal = ?'

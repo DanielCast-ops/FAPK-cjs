@@ -12,23 +12,38 @@ empleado_controller = Empleado(cjsdb)
 proveedor_controller = Proveedor(cjsdb)
 estado_controller = EstadoServicio(cjsdb)
 
-def inicializar():#inicializador, datos base para el funcionamiento de la db
-    id_cargo = cargo_controller.crear_cargo('user')
-    #print(f"Registro creado en 'cargo' con id: {id_cargo}")
+def inicializar():
+    # Cargo
+    if not cargo_controller.obtener_cargo(1):
+        id_cargo = cargo_controller.crear_cargo('user')
+        print(f"Registro creado en 'cargo' con id: {id_cargo}")
 
-    id_cliente = cliente_controller.crear_cliente('cliente', 'ninguno')
-    #print(f"Registro creado en 'cliente' con id: {id_cliente}")
+    # Cliente
+    if not cliente_controller.obtener_cliente(1):
+        id_cliente = cliente_controller.crear_cliente('cliente', 'ninguno')
+        print(f"Registro creado en 'cliente' con id: {id_cliente}")
 
-    id_empleado = empleado_controller.crear_empleado('empleado', id_cargo, 'ninguno')
-    #print(f"Registro creado en 'empleados' con id: {id_empleado}")
+    # Empleado
+    if not empleado_controller.obtener_empleado(1):
+        id_empleado = empleado_controller.crear_empleado('empleado', 1, 'ninguno')
+        print(f"Registro creado en 'empleados' con id: {id_empleado}")
 
-    id_estado_1 = estado_controller.crear_estado_servicio('recibido')
-    id_estado_2 = estado_controller.crear_estado_servicio('en proceso')
-    id_estado_3 = estado_controller.crear_estado_servicio('terminado')
-    #print(f"Registros creados en 'estado_servicio' con ids: {id_estado_1}, {id_estado_2}, {id_estado_3}")
+    # Estados de Servicio
+    estados_default = ['recibido', 'en proceso', 'terminado']
+    for i, estado in enumerate(estados_default, start=1):
+        if not estado_controller.obtener_estado_servicio(i):
+            id_estado = estado_controller.crear_estado_servicio(estado)
+            print(f"Registro creado en 'estado_servicio' con id: {id_estado}")
 
-    id_proveedor = proveedor_controller.crear_proveedor('proveedor', 'ninguno', 'ninguno')
-    #print(f"Registro creado en 'proveedores' con id: {id_proveedor}")
+    # Proveedor
+    if not proveedor_controller.obtener_proveedor(1):
+        id_proveedor = proveedor_controller.crear_proveedor('proveedor', 'ninguno', 'ninguno')
+        print(f"Registro creado en 'proveedores' con id: {id_proveedor}")
 
-    user = usrdb.registrar_usuario('admin', 'admin')
-    #print(f"Registro creado en 'usuarios' con user: {user}")
+    # Usuario
+    if not usrdb.Consultar_usuario('admin'):
+        user = usrdb.registrar_usuario('admin', 'admin')
+        print(f"Registro creado en 'usuarios' con user: {user}")
+
+if __name__ == "__main__":
+    inicializar()
