@@ -93,7 +93,7 @@ def conexionycreacion(base):
 
     con.commit()
 
-    print("Se han creado las tablas")
+    #print("Se han creado las tablas")
 
     # Cerramos la conexión
     con.close()

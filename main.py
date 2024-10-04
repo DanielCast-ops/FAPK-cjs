@@ -3,11 +3,13 @@
 import flet as ft
 from Paginas import login, usuarios, historial, articulos, inventario, servicios, estado_servicios
 from Controladores_bases.Cbase_principal import crear_base
+from Controladores_bases.inicializador import inicializar
 
 def main(page: ft.Page):
     page.title = "Gestión de la Aplicación"
     page.theme_mode = ft.ThemeMode.LIGHT
     crear_base('cjs.db')
+    inicializar()
     # Aqui pongo una funcion para manejar la navegación entre páginas
     def route_change(route):
         page.views.clear()
