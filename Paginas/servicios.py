@@ -5,8 +5,7 @@ db = 'cjs.db'
 servicio_controller = Servicio(db)
 estado_controller = EstadoServicio(db)
 
-#se cambiaron algunos de los estilos para mejorar posteriormente
-
+# Página de administración de servicios
 def administracion_servicios(page):
     def mostrar_historial_servicios():
         try:
@@ -18,7 +17,7 @@ def administracion_servicios(page):
                             ft.ListTile(
                                 leading=ft.Icon(ft.icons.WORK),
                                 title=ft.Text(servicio['nombre'], weight=ft.FontWeight.BOLD),
-                                subtitle=ft.Text(f"Fecha: {servicio['fecha']}"),
+                                subtitle=ft.Text(f"Fecha: {servicio['fecha']} | Detalles: {servicio['detalles']}"),
                             ),
                             ft.Row([
                                 ft.ElevatedButton("Editar", icon=ft.icons.EDIT,
@@ -42,23 +41,34 @@ def administracion_servicios(page):
         lista_servicios.controls = mostrar_historial_servicios()
         page.update()
 
+    # Inputs para crear/editar servicios
     nombre_input = ft.TextField(label="Nombre del Servicio", expand=True)
     fecha_input = ft.TextField(label="Fecha (YYYY-MM-DD)", expand=True)
     telefono_input = ft.TextField(label="Teléfono Extra", expand=True)
+    detalles_input = ft.TextField(label="Detalles del Servicio", expand=True)
+    estado_id_input = ft.TextField(label="ID del Estado", expand=True)
+    cliente_id_input = ft.TextField(label="ID del Cliente", expand=True)
+    personal_id_input = ft.TextField(label="ID del Personal", expand=True)
     message = ft.Text()
 
     def agregar_servicio(e):
         nombre = nombre_input.value
         fecha = fecha_input.value
         telefono_extra = telefono_input.value
-        cliente_id = "1"
-        personal_id = "1"
+        detalles = detalles_input.value
+        estado_id = estado_id_input.value
+        cliente_id = cliente_id_input.value
+        personal_id = personal_id_input.value
 
-        if servicio_controller.crear_servicio(nombre, fecha, telefono_extra, cliente_id, personal_id):
+        if servicio_controller.crear_servicio(nombre, fecha, telefono_extra, detalles, estado_id, cliente_id, personal_id):
             message.value = "Servicio creado exitosamente."
             nombre_input.value = ""
             fecha_input.value = ""
             telefono_input.value = ""
+            detalles_input.value = ""
+            estado_id_input.value = ""
+            cliente_id_input.value = ""
+            personal_id_input.value = ""
             actualizar_lista()
         else:
             message.value = "Error al crear el servicio."
@@ -70,6 +80,10 @@ def administracion_servicios(page):
             nombre_input.value = servicio['nombre']
             fecha_input.value = servicio['fecha']
             telefono_input.value = servicio['telefono_extra']
+            detalles_input.value = servicio['detalles']
+            estado_id_input.value = servicio['estado_id']
+            cliente_id_input.value = servicio['cliente_id']
+            personal_id_input.value = servicio['personal_id']
         page.update()
 
     def eliminar_servicio(id_servicio):
@@ -85,6 +99,7 @@ def administracion_servicios(page):
                 content=ft.Column([
                     ft.Text("Agregar Nuevo Servicio", size=20, weight=ft.FontWeight.BOLD),
                     ft.Row([nombre_input, fecha_input, telefono_input], expand=True),
+                    ft.Row([detalles_input, estado_id_input, cliente_id_input, personal_id_input], expand=True),
                     ft.ElevatedButton("Agregar Servicio", on_click=agregar_servicio, icon=ft.icons.ADD),
                     message,
                 ]),
@@ -99,3 +114,4 @@ def administracion_servicios(page):
 
     actualizar_lista()
     return vista
+
