@@ -68,24 +68,28 @@ def conexionycreacion(base):
     ''')
 
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS servicios (
-            id_servicio INTEGER PRIMARY KEY,
-            nombre VARCHAR(50) NOT NULL,
-            fecha DATE NOT NULL,
-            telefono_extra VARCHAR(45),
-            cliente_id INTEGER NOT NULL,
-            personal_id INTEGER NOT NULL,
-            FOREIGN KEY (cliente_id) REFERENCES clientes(id_cliente),
-            FOREIGN KEY (personal_id) REFERENCES empleados(id_personal)
-        )
-    ''')
-
-    cursor.execute('''
         CREATE TABLE IF NOT EXISTS estado_servicio (
             id_estado INTEGER PRIMARY KEY AUTOINCREMENT,
             descripcion VARCHAR(50) NOT NULL
         )
     ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS servicios (
+            id_servicio INTEGER PRIMARY KEY,
+            nombre VARCHAR(50) NOT NULL,
+            fecha DATE NOT NULL,
+            telefono_extra VARCHAR(45),
+            Detalles VARCHAR(100),
+            estado_id INTEGER NOT NULL,
+            cliente_id INTEGER NOT NULL,
+            personal_id INTEGER NOT NULL,
+            FOREIGN KEY (estado_id) REFERENCES estado_servicio(id_estado),
+            FOREIGN KEY (cliente_id) REFERENCES clientes(id_cliente),
+            FOREIGN KEY (personal_id) REFERENCES empleados(id_personal)
+        )
+    ''')
+
 
     con.commit()
 

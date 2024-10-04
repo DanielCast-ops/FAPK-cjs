@@ -235,26 +235,36 @@ class Inventario:
         self.base_de_datos.cerrar_conexion()
 
 #clase servicio
-
 class Servicio:
     def __init__(self, nombredb):
         self.base_de_datos = base_de_datos(nombredb)
 
-    def crear_servicio(self, nombre, fecha, telefono_extra, cliente_id, personal_id):
-        consulta = 'INSERT INTO servicios (nombre, fecha, telefono_extra, cliente_id, personal_id) VALUES (?, ?, ?, ?, ?)'
-        return self.base_de_datos.ejecutar_sentencia(consulta, (nombre, fecha, telefono_extra, cliente_id, personal_id))
+    def crear_servicio(self, nombre, fecha, telefono_extra, detalles, estado_id, cliente_id, personal_id):
+        consulta = '''INSERT INTO servicios (nombre, fecha, telefono_extra, Detalles, estado_id, cliente_id, personal_id)
+                      VALUES (?, ?, ?, ?, ?, ?, ?)'''
+        return self.base_de_datos.ejecutar_sentencia(consulta, (nombre, fecha, telefono_extra, detalles, estado_id, cliente_id, personal_id))
 
     def obtener_servicio(self, id_servicio):
         consulta = 'SELECT * FROM servicios WHERE id_servicio = ?'
         resultado = self.base_de_datos.ejecutar_consulta(consulta, (id_servicio,))
         if resultado:
-            return {'id_servicio': resultado[0][0], 'nombre': resultado[0][1], 'fecha': resultado[0][2], 'telefono_extra': resultado[0][3], 'cliente_id': resultado[0][4], 'id_personal': resultado[0][5]}
+            return {
+                'id_servicio': resultado[0][0],
+                'nombre': resultado[0][1],
+                'fecha': resultado[0][2],
+                'telefono_extra': resultado[0][3],
+                'detalles': resultado[0][4],
+                'estado_id': resultado[0][5],
+                'cliente_id': resultado[0][6],
+                'personal_id': resultado[0][7]
+            }
         else:
             return None
 
-    def actualizar_servicio(self, id_servicio, nuevo_nombre, nueva_fecha, nuevo_telefono_extra, nuevo_cliente_id, nuevo_id_personal):
-        consulta = 'UPDATE servicios SET nombre = ?, fecha = ?, telefono_extra = ?, cliente_id = ?, id_personal = ? WHERE id_servicio = ?'
-        self.base_de_datos.ejecutar_sentencia(consulta, (nuevo_nombre, nueva_fecha, nuevo_telefono_extra, nuevo_cliente_id, nuevo_id_personal, id_servicio))
+    def actualizar_servicio(self, id_servicio, nuevo_nombre, nueva_fecha, nuevo_telefono_extra, nuevos_detalles, nuevo_estado_id, nuevo_cliente_id, nuevo_id_personal):
+        consulta = '''UPDATE servicios SET nombre = ?, fecha = ?, telefono_extra = ?, Detalles = ?, estado_id = ?,
+                      cliente_id = ?, personal_id = ? WHERE id_servicio = ?'''
+        self.base_de_datos.ejecutar_sentencia(consulta, (nuevo_nombre, nueva_fecha, nuevo_telefono_extra, nuevos_detalles, nuevo_estado_id, nuevo_cliente_id, nuevo_id_personal, id_servicio))
 
     def eliminar_servicio(self, id_servicio):
         consulta = 'DELETE FROM servicios WHERE id_servicio = ?'
@@ -270,13 +280,16 @@ class Servicio:
                 'nombre': servicio[1],
                 'fecha': servicio[2],
                 'telefono_extra': servicio[3],
-                'cliente_id': servicio[4],
-                'id_personal': servicio[5]
+                'detalles': servicio[4],
+                'estado_id': servicio[5],
+                'cliente_id': servicio[6],
+                'personal_id': servicio[7]
             })
         return servicios
 
     def cerrar_conexion(self):
         self.base_de_datos.cerrar_conexion()
+
 
 class EstadoServicio:
     def __init__(self, nombredb):
