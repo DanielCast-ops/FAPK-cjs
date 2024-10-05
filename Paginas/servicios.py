@@ -25,9 +25,9 @@ def administracion_servicios(page):
                             ft.Text(f"Estado: {obtener_nombre_estado(servicio['estado_id'])}"),
                             ft.Row([
                                 ft.ElevatedButton("Editar", icon=ft.icons.EDIT,
-                                                  on_click=lambda _, id=servicio['id_servicio']: editar_servicio(id)),
+                                                  on_click=lambda _, id=servicio['id_servicio']: editar_servicio(id), icon_color="#316938", style=ft.ButtonStyle(color="#316938")),
                                 ft.ElevatedButton("Eliminar", icon=ft.icons.DELETE,
-                                                  on_click=lambda _, id=servicio['id_servicio']: eliminar_servicio(id)),
+                                                  on_click=lambda _, id=servicio['id_servicio']: eliminar_servicio(id), icon_color="#316938", style=ft.ButtonStyle( color="#316938")),
                             ], alignment=ft.MainAxisAlignment.END)
                         ]),
                         padding=10
