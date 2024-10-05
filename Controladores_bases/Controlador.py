@@ -284,11 +284,12 @@ class Servicio:
     def actualizar_servicio(self, id_servicio, nuevo_nombre, nueva_fecha, nuevo_telefono_extra, nuevos_detalles, nuevo_estado_id, nuevo_cliente_id, nuevo_id_personal):
         consulta = '''UPDATE servicios SET nombre = ?, fecha = ?, telefono_extra = ?, Detalles = ?, estado_id = ?,
                       cliente_id = ?, personal_id = ? WHERE id_servicio = ?'''
-        self.base_de_datos.ejecutar_sentencia(consulta, (nuevo_nombre, nueva_fecha, nuevo_telefono_extra, nuevos_detalles, nuevo_estado_id, nuevo_cliente_id, nuevo_id_personal, id_servicio))
+        resultado = self.base_de_datos.ejecutar_sentencia(consulta, (nuevo_nombre, nueva_fecha, nuevo_telefono_extra, nuevos_detalles, nuevo_estado_id, nuevo_cliente_id, nuevo_id_personal, id_servicio))
+        return True
 
     def eliminar_servicio(self, id_servicio):
         consulta = 'DELETE FROM servicios WHERE id_servicio = ?'
-        self.base_de_datos.ejecutar_sentencia(consulta, (id_servicio,))
+        return self.base_de_datos.ejecutar_sentencia(consulta, (id_servicio,))
 
     def obtener_todos_los_servicios(self):
         consulta = 'SELECT * FROM servicios'
@@ -309,7 +310,6 @@ class Servicio:
 
     def cerrar_conexion(self):
         self.base_de_datos.cerrar_conexion()
-
 
 class EstadoServicio:
     def __init__(self, nombredb):
