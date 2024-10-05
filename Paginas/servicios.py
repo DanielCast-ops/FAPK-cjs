@@ -10,6 +10,7 @@ estado_controller = EstadoServicio(db)
 def administracion_servicios(page):
     modo_edicion = False
     id_servicio_actual = None
+
     def mostrar_historial_servicios():
         try:
             servicios = servicio_controller.obtener_todos_los_servicios()
@@ -150,10 +151,24 @@ def administracion_servicios(page):
     # boton para (Agregar o Actualizar)
     boton_accion = ft.ElevatedButton("Agregar Servicio", on_click=guardar_o_actualizar_servicio, icon=ft.icons.ADD)
 
+    # función para navegar a la página de estados
+    def ir_a_pagina_estados(e):
+        page.go("/estado_servicios")  # Asumiendo que tienes una ruta para la página de estados
+
+    icono_estados = ft.IconButton(
+        icon=ft.icons.LIST,
+        tooltip="Administrar Estados",
+        on_click=ir_a_pagina_estados
+    )
+
     vista = ft.View(
         "/administrar_servicios",
         [
-            ft.AppBar(title=ft.Text("Administración de Servicios"), bgcolor=ft.colors.BLUE),
+            ft.AppBar(
+                title=ft.Text("Administración de Servicios"),
+                bgcolor=ft.colors.BLUE,
+                actions=[icono_estados]
+            ),
             ft.Container(
                 content=ft.Column([
                     ft.Text("Agregar/Editar Servicio", size=20, weight=ft.FontWeight.BOLD),
