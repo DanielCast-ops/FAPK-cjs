@@ -1,7 +1,6 @@
 import flet as ft
 from Controladores_bases.Controlador import Servicio, EstadoServicio
 from datetime import datetime
-import logging
 
 db = 'cjs.db'
 servicio_controller = Servicio(db)
@@ -151,23 +150,34 @@ def administracion_servicios(page):
     # boton para (Agregar o Actualizar)
     boton_accion = ft.ElevatedButton("Agregar Servicio", on_click=guardar_o_actualizar_servicio, icon=ft.icons.ADD)
 
-    # función para navegar a la página de estados
+    # función para navegar a la página de estados y home
     def ir_a_pagina_estados(e):
-        page.go("/estado_servicios")  # Asumiendo que tienes una ruta para la página de estados
+        page.go("/estado_servicios")
+
+    def ir_a_home(e):
+        page.go("/home")
 
     icono_estados = ft.IconButton(
-        icon=ft.icons.LIST,
+        icon=ft.icons.SETTINGS,
         tooltip="Administrar Estados",
+        icon_color="white",
         on_click=ir_a_pagina_estados
+    )
+
+    icono_home = ft.IconButton(
+        icon=ft.icons.HOME,
+        tooltip="home",
+        icon_color="white",
+        on_click=ir_a_home
     )
 
     vista = ft.View(
         "/administrar_servicios",
         [
             ft.AppBar(
-                title=ft.Text("Administración de Servicios"),
-                bgcolor=ft.colors.BLUE,
-                actions=[icono_estados]
+                title=ft.Text("Administración de Servicios", color="white"),
+                bgcolor="#316938",
+                actions=[icono_home, icono_estados]
             ),
             ft.Container(
                 content=ft.Column([
