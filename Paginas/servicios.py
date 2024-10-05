@@ -47,8 +47,8 @@ def administracion_servicios(page):
     telefono_input = ft.TextField(label="Teléfono Extra", expand=True)
     detalles_input = ft.TextField(label="Detalles del Servicio", expand=True)
     estado_id_input = ft.TextField(label="ID del Estado", expand=True)
-    cliente_id_input = ft.TextField(label="ID del Cliente", expand=True)
-    personal_id_input = ft.TextField(label="ID del Personal", expand=True)
+    #cliente_id_input = ft.TextField(label="ID del Cliente", expand=True)
+    #personal_id_input = ft.TextField(label="ID del Personal", expand=True)
     message = ft.Text()
 
     def agregar_servicio(e):
@@ -57,8 +57,8 @@ def administracion_servicios(page):
         telefono_extra = telefono_input.value
         detalles = detalles_input.value
         estado_id = estado_id_input.value
-        cliente_id = cliente_id_input.value
-        personal_id = personal_id_input.value
+        cliente_id = '1'
+        personal_id = '1'
 
         if servicio_controller.crear_servicio(nombre, fecha, telefono_extra, detalles, estado_id, cliente_id, personal_id):
             message.value = "Servicio creado exitosamente."
@@ -67,8 +67,8 @@ def administracion_servicios(page):
             telefono_input.value = ""
             detalles_input.value = ""
             estado_id_input.value = ""
-            cliente_id_input.value = ""
-            personal_id_input.value = ""
+            #cliente_id_input.value = ""
+            #personal_id_input.value = ""
             actualizar_lista()
         else:
             message.value = "Error al crear el servicio."
@@ -82,8 +82,8 @@ def administracion_servicios(page):
             telefono_input.value = servicio['telefono_extra']
             detalles_input.value = servicio['detalles']
             estado_id_input.value = servicio['estado_id']
-            cliente_id_input.value = servicio['cliente_id']
-            personal_id_input.value = servicio['personal_id']
+            #cliente_id_input.value = servicio['cliente_id']
+            #personal_id_input.value = servicio['personal_id']
         page.update()
 
     def eliminar_servicio(id_servicio):
@@ -99,7 +99,7 @@ def administracion_servicios(page):
                 content=ft.Column([
                     ft.Text("Agregar Nuevo Servicio", size=20, weight=ft.FontWeight.BOLD),
                     ft.Row([nombre_input, fecha_input, telefono_input], expand=True),
-                    ft.Row([detalles_input, estado_id_input, cliente_id_input, personal_id_input], expand=True),
+                    ft.Row([detalles_input, estado_id_input], expand=True),
                     ft.ElevatedButton("Agregar Servicio", on_click=agregar_servicio, icon=ft.icons.ADD),
                     message,
                 ]),
