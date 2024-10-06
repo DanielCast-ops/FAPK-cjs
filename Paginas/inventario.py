@@ -95,13 +95,11 @@ def mostrar_inventario(page):
         horizontal_lines=ft.border.BorderSide(1, "#316938"),
     )
 
-    contenedor_scroll = ft.Container(
-        content=tabla_contenido,
-        height=300,
-        border=ft.border.all(1, "#316938"),
-        border_radius=10,
-        padding=10,
-    )
+    contenido_principal = ft.Column([
+        ft.Text("Resumen de Inventario", size=20, weight=ft.FontWeight.BOLD, color="#316938"),
+        generar_grafico(),
+        tabla_contenido
+    ])
 
     return ft.View(
         "/inventario",
@@ -112,12 +110,13 @@ def mostrar_inventario(page):
                 actions=[icono_home, icono_agregar, icono_historial]
             ),
             ft.Container(
-                content=ft.Column([
-                    ft.Text("Resumen de Inventario", size=20, weight=ft.FontWeight.BOLD, color="#316938"),
-                    generar_grafico(),
-                    contenedor_scroll
-                ]),
-                padding=20,
+                content=ft.ListView(
+                    [contenido_principal],
+                    expand=True,
+                    spacing=20,
+                    padding=20,
+                ),
+                expand=True,
             ),
         ],
         bgcolor="#F0F0F0"
