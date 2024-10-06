@@ -42,7 +42,7 @@ def main(page: ft.Page):
     page.on_view_pop = go_back
 
     # Definir la ruta inicial como el login
-    page.go("/servicios")
+    page.go("/inventario")
 
 # Correr la app
 ft.app(target=main)
