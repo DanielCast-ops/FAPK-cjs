@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import flet as ft
 from Controladores_bases.Controlador import Articulo, Inventario
 from flet.plotly_chart import PlotlyChart
@@ -11,11 +9,9 @@ def mostrar_inventario(page):
     articulo_controller = Articulo(db)
     inventario_controller = Inventario(db)
 
-    # en esta parte obtengo el inventario
     def obtener_inventario_total():
         articulos = articulo_controller.obtener_todos_los_articulos()
         resumen = []
-        #print(f"listado de articulos {articulos}")#depuracion
         for articulo in articulos:
             cantidad_total = inventario_controller.obtener_cantidad_articulo(articulo['nombre'])
             resumen.append({
@@ -25,7 +21,6 @@ def mostrar_inventario(page):
             })
         return resumen
 
-    # aqui se genera la tabla
     def generar_tabla_resumen():
         filas = []
         resumen = obtener_inventario_total()
@@ -40,48 +35,90 @@ def mostrar_inventario(page):
             filas.append(fila)
         return filas
 
-    # En esta parte trabajo los graficos
     def generar_grafico():
         resumen = obtener_inventario_total()
         nombres = [articulo['nombre'] for articulo in resumen]
         cantidades = [articulo['cantidad'] for articulo in resumen]
 
-        fig = go.Figure(data=[go.Bar(x=nombres, y=cantidades)])
-        fig.update_layout(title='Cantidad de Artículos por Nombre', xaxis_title='Artículo', yaxis_title='Cantidad')
+        fig = go.Figure(data=[go.Bar(x=nombres, y=cantidades, marker_color='#316938')])
+        fig.update_layout(
+            title='Cantidad de Artículos por Nombre',
+            xaxis_title='Artículo',
+            yaxis_title='Cantidad',
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            font=dict(color='#316938')
+        )
 
         return PlotlyChart(fig, expand=True)
 
-    # aqui los botones de navegacion
-    boton_principal = ft.ElevatedButton("Página Principal", on_click=lambda _: page.go("/"))
-    boton_agregar = ft.IconButton(icon=ft.icons.ADD, on_click=lambda _: page.go("/articulos"))
-    boton_historial = ft.IconButton(icon=ft.icons.HISTORY, on_click=lambda _: page.go("/historial"))
+    def ir_a_home(e):
+        page.go("/home")
 
-    # esta es la tabla de resumen del inventario
+    def ir_a_articulos(e):
+        page.go("/articulos")
+
+    def ir_a_historial(e):
+        page.go("/historial")
+
+    icono_home = ft.IconButton(
+        icon=ft.icons.HOME,
+        tooltip="Inicio",
+        icon_color="white",
+        on_click=ir_a_home
+    )
+
+    icono_agregar = ft.IconButton(
+        icon=ft.icons.ADD,
+        tooltip="Agregar Artículo",
+        icon_color="white",
+        on_click=ir_a_articulos
+    )
+
+    icono_historial = ft.IconButton(
+        icon=ft.icons.HISTORY,
+        tooltip="Historial",
+        icon_color="white",
+        on_click=ir_a_historial
+    )
+
     tabla_contenido = ft.DataTable(
         columns=[
-            ft.DataColumn(ft.Text("Artículo")),
-            ft.DataColumn(ft.Text("Cantidad")),
-            ft.DataColumn(ft.Text("Especificación")),
+            ft.DataColumn(ft.Text("Artículo", color="#316938")),
+            ft.DataColumn(ft.Text("Cantidad", color="#316938")),
+            ft.DataColumn(ft.Text("Especificación", color="#316938")),
         ],
-        rows=generar_tabla_resumen()
+        rows=generar_tabla_resumen(),
+        border=ft.border.all(1, "#316938"),
+        border_radius=10,
+        vertical_lines=ft.border.BorderSide(1, "#316938"),
+        horizontal_lines=ft.border.BorderSide(1, "#316938"),
     )
 
-    # contenedor
-    contenedor_scroll = ft.Column(
-        controls=[tabla_contenido],
+    contenedor_scroll = ft.Container(
+        content=tabla_contenido,
         height=300,
-        scroll="auto"
+        border=ft.border.all(1, "#316938"),
+        border_radius=10,
+        padding=10,
     )
 
-    # controlador principal
-    return ft.Column(
-        controls=[
-            ft.Row(
-                controls=[boton_principal, boton_agregar, boton_historial],
-                alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+    return ft.View(
+        "/inventario",
+        [
+            ft.AppBar(
+                title=ft.Text("Inventario", color="white"),
+                bgcolor="#316938",
+                actions=[icono_home, icono_agregar, icono_historial]
             ),
-            generar_grafico(),
-            contenedor_scroll
-        ]
+            ft.Container(
+                content=ft.Column([
+                    ft.Text("Resumen de Inventario", size=20, weight=ft.FontWeight.BOLD, color="#316938"),
+                    generar_grafico(),
+                    contenedor_scroll
+                ]),
+                padding=20,
+            ),
+        ],
+        bgcolor="#F0F0F0"
     )
-
