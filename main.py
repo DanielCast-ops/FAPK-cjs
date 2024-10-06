@@ -43,7 +43,7 @@ def main(page: ft.Page):
     page.on_route_change = route_change
     page.on_view_pop = go_back
 
-    # Definir la ruta inicial como el login
+    #  inicial como el login
     page.go("/home")
 
 # Correr la app
