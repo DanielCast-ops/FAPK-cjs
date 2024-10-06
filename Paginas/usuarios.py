@@ -1,62 +1,64 @@
 import flet as ft
 from Controladores_bases.ACbase_usuario import base_usuario
 
-# Aqui se instancia la base de datos
 db = base_usuario()
 
 def mostrar_usuarios(page):
-    # Aqui se definen los componentes iniciales
-    user_list = ft.ListView(expand=True, spacing=10)
-    username_input = ft.TextField(label="Nombre de usuario")
-    password_input = ft.TextField(label="Contraseña", password=True, can_reveal_password=True)
-    message = ft.Text()
+    user_list = ft.ListView(expand=1, spacing=10, padding=20)
+    username_input = ft.TextField(label="Nombre de usuario", border_color="#316938")
+    password_input = ft.TextField(label="Contraseña", password=True, can_reveal_password=True, border_color="#316938")
+    message = ft.Text(color="#316938")
 
-    boton = ft.ElevatedButton("Agregar usuario", on_click=None) #agrego una variable para que el boton sea interactivo
-    usuario_actual = None #almacenamos el usuario actual
-    # Aqui cargamos la base de datos
+    boton = ft.ElevatedButton(
+        "Agregar usuario",
+        on_click=None,
+        style=ft.ButtonStyle(color="white", bgcolor="#316938")
+    )
+    usuario_actual = None
+
     def cargar_usuarios():
         user_list.controls.clear()
-        usuarios = db.listar_usuarios()  # Aqui se obtienen los usuarios de la base de datos
+        usuarios = db.listar_usuarios()
         for usuario in usuarios:
-            # Aqui la funcion para que muestre la opcion de eliminar el usuario o borrarlo
             user_list.controls.append(
-                ft.Row(
-                    [
-                        ft.Text(f"ID: {usuario[0]}"),
-                        ft.Text(f"Nombre: {usuario[1]}"),
-                        ft.IconButton(ft.icons.EDIT, on_click=lambda e, usuario=usuario: editar_usuario(usuario)),
-                        ft.IconButton(ft.icons.DELETE, on_click=lambda e, usuario=usuario: borrar_usuario(usuario[1]))
-                    ]
+                ft.Container(
+                    ft.Row(
+                        [
+                            ft.Text(f"ID: {usuario[0]}", color="#316938"),
+                            ft.Text(f"Nombre: {usuario[1]}", color="#316938"),
+                            ft.IconButton(ft.icons.EDIT, icon_color="#316938", on_click=lambda e, usuario=usuario: editar_usuario(usuario)),
+                            ft.IconButton(ft.icons.DELETE, icon_color="#316938", on_click=lambda e, usuario=usuario: borrar_usuario(usuario[1]))
+                        ],
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+                    ),
+                    bgcolor="#F0F0F0",
+                    border_radius=10,
+                    padding=10
                 )
             )
         page.update()
 
-    # Aqui pongo la funcion para crear un nuevo usuario
     def agregar_usuario(e):
         username = username_input.value
         password = password_input.value
         if db.registrar_usuario(username, password):
             message.value = "Usuario registrado exitosamente."
-            cargar_usuarios()  # Recargar la lista de usuarios
+            cargar_usuarios()
         else:
             message.value = "Error: El nombre de usuario ya existe."
         username_input.value = ""
         password_input.value = ""
         page.update()
 
-    # Aqui la funcion para editar el usuario
     def editar_usuario(user):
         nonlocal usuario_actual
-        usuario_actual = user  # guardamos el usuario que se está editando
-        username_input.value = user[1]  # en esta parte se llena el campo con el nombre de usuario existente
-        password_input.value = ""  # se limpia el campo de contraseña
-
-        # aqui cambiamos el boton a "Actualizar usuario"
+        usuario_actual = user
+        username_input.value = user[1]
+        password_input.value = ""
         boton.text = "Actualizar usuario"
         boton.on_click = actualizar_usuario
         page.update()
 
-        # Aqui para actualizar el password
     def actualizar_usuario(e):
         nonlocal usuario_actual
         new_password = password_input.value
@@ -66,42 +68,52 @@ def mostrar_usuarios(page):
             message.value = "Error al actualizar el usuario."
         username_input.value = ""
         password_input.value = ""
-        usuario_actual = None  # aqui se limpia el estado del usuario que se está editando
-
-        # en esta parte cambiamos el botón de nuevo a "Agregar usuario"
+        usuario_actual = None
         boton.text = "Agregar usuario"
         boton.on_click = agregar_usuario
-        cargar_usuarios()  # Recargamos la lista de usuarios
+        cargar_usuarios()
         page.update()
 
-
-    # En esta parte esta la funcion para borrar el usuario
     def borrar_usuario(username):
         if db.eliminar_usuario(username):
             message.value = "Usuario eliminado exitosamente."
         else:
             message.value = "Error al eliminar el usuario."
-        cargar_usuarios()  # Recargar la lista de usuarios
+        cargar_usuarios()
         page.update()
 
-    # Cargar usuarios cuando se abre la página
     cargar_usuarios()
 
     return ft.View(
         "/users",
         [
-            ft.Text("Administración de Usuarios", size=30),
-            user_list,  # Aquí se mostrará la lista de usuarios
-            ft.Text("Agregar/Editar Usuario:", size=20),
-            username_input,
-            password_input,
-            ft.Row(
-                [
-                    boton,  # Botón variable
-                ],
-                alignment=ft.MainAxisAlignment.START,
+            ft.AppBar(
+                title=ft.Text("Administración de Usuarios", color="white"),
+                bgcolor="#316938",
+                center_title=True
             ),
-            message,  # Mostrar mensajes de éxito o error
-            ft.ElevatedButton("Regresar", on_click=lambda _: page.go("/")),  # Botón para volver a la página principal
-        ]
+            ft.Container(
+                content=ft.Column([
+                    user_list,
+                    ft.Divider(color="#316938"),
+                    ft.Text("Agregar/Editar Usuario:", size=20, color="#316938", weight=ft.FontWeight.BOLD),
+                    username_input,
+                    password_input,
+                    ft.Row(
+                        [boton],
+                        alignment=ft.MainAxisAlignment.START,
+                    ),
+                    message,
+                    ft.ElevatedButton(
+                        "Regresar",
+                        on_click=lambda _: page.go("/home"),
+                        style=ft.ButtonStyle(color="white", bgcolor="#316938")
+                    ),
+                ], spacing=20),
+                padding=20,
+                bgcolor="#F0F0F0",
+                expand=True
+            )
+        ],
+        bgcolor="#F0F0F0"
     )

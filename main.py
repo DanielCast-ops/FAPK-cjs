@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import flet as ft
-from Paginas import login, usuarios, historial, articulos, inventario, servicios, estado_servicios
+from Paginas import login, usuarios, historial, articulos, inventario, servicios, estado_servicios, home
 from Controladores_bases.Cbase_principal import crear_base
 from Controladores_bases.inicializador import inicializar
 
@@ -29,6 +29,8 @@ def main(page: ft.Page):
             page.views.append(estado_servicios.gestion_estados_servicios(page))
         elif page.route == "/login":
             page.views.append(login.Vista_login(page))  # Página de login
+        elif page.route == "/home":
+            page.views.append(home.mostrar_home(page))
         page.update()
 
     # y aqui una función para regresar a la página anterior
@@ -42,7 +44,7 @@ def main(page: ft.Page):
     page.on_view_pop = go_back
 
     # Definir la ruta inicial como el login
-    page.go("/inventario")
+    page.go("/home")
 
 # Correr la app
 ft.app(target=main)
