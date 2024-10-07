@@ -11,20 +11,20 @@ def registrar_articulo(page):
     # Campos del forulario
     nombre_input = ft.TextField(label="Nombre del Artículo")
     especificacion_input = ft.TextField(label="Especificación")
-    proveedor_input = ft.TextField(label="ID del Proveedor")
+    #proveedor_input = ft.TextField(label="ID del Proveedor")
     message = ft.Text()
 
     # funcion para agregar un artículo
     def agregar_articulo(e):
         nombre = nombre_input.value
         especificacion = especificacion_input.value
-        id_proveedor = proveedor_input.value
+        id_proveedor = "1"
 
         if articulo_controller.crear_articulo(nombre, especificacion, id_proveedor):
             message.value = "Artículo registrado exitosamente."
             nombre_input.value = ""
             especificacion_input.value = ""
-            proveedor_input.value = ""
+            #proveedor_input.value = ""
             actualizar_tabla()  # actualiza la tabla después de registrar un nuevo artículo
         else:
             message.value = "Error: No se pudo registrar el artículo."
@@ -89,7 +89,7 @@ def registrar_articulo(page):
             ft.Text("Registro de Artículo", size=30),
             nombre_input,
             especificacion_input,
-            proveedor_input,
+            #proveedor_input,
             registrar_button,
             message,
             ft.Text("Lista de Artículos Registrados", size=20),
