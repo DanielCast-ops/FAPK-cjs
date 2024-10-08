@@ -1,5 +1,5 @@
 import sqlite3
-import bcrypt
+from passlib.hash import argon2
 
 class base_usuario:
     def __init__(self, db_name="usuarios.db"):
@@ -19,7 +19,7 @@ class base_usuario:
 
     def registrar_usuario(self, username, password):
         # aqui se crea el usuario con pass hasheado para seguridad
-        hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        hashed = argon2.hash(password)
         try:
             self.cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed))
             self.conn.commit()
@@ -33,7 +33,7 @@ class base_usuario:
         result = self.cursor.fetchone()
         if result:
             stored_password = result[0]
-            return bcrypt.checkpw(password.encode('utf-8'), stored_password.encode('utf-8'))
+            return argon2.verify(password, stored_password)
         return False
 
     def Consultar_usuario(self, username):
@@ -43,7 +43,7 @@ class base_usuario:
 
     def actualizar_usuario(self, username, new_password):
         # aqui esta la funcion para editar la key
-        hashed = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+        hashed = argon2.hash(new_password)
         self.cursor.execute("UPDATE users SET password=? WHERE username=?", (hashed, username))
         self.conn.commit()
         return self.cursor.rowcount > 0
@@ -53,7 +53,7 @@ class base_usuario:
         self.cursor.execute("DELETE FROM users WHERE username=?", (username,))
         self.conn.commit()
         return self.cursor.rowcount > 0
-        
+
     def listar_usuarios(self):
         # aqui una funcion para que se listen todos los usuarios
         self.cursor.execute("SELECT id, username FROM users")

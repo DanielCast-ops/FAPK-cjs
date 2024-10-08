@@ -9,11 +9,6 @@ def mostrar_usuarios(page):
     password_input = ft.TextField(label="Contraseña", password=True, can_reveal_password=True, border_color="#316938")
     message = ft.Text(color="#316938")
 
-    boton = ft.ElevatedButton(
-        "Agregar usuario",
-        on_click=None,
-        style=ft.ButtonStyle(color="white", bgcolor="#316938")
-    )
     usuario_actual = None
 
     def cargar_usuarios():
@@ -81,6 +76,13 @@ def mostrar_usuarios(page):
             message.value = "Error al eliminar el usuario."
         cargar_usuarios()
         page.update()
+
+
+    boton = ft.ElevatedButton(
+        "Agregar usuario",
+        on_click = agregar_usuario,
+        style=ft.ButtonStyle(color="white", bgcolor="#316938")
+    )
 
     cargar_usuarios()
 
