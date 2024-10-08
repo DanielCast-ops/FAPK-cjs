@@ -1,7 +1,6 @@
 import flet as ft
 from Controladores_bases.Controlador import Articulo, Inventario
-from flet.plotly_chart import PlotlyChart
-import plotly.graph_objects as go
+import svgwrite #reemplazo el controlador anterior por este que no tiene codigo nativo
 
 db = 'cjs.db'
 
@@ -21,6 +20,67 @@ def mostrar_inventario(page):
             })
         return resumen
 
+    def crear_grafico_barras(datos, ancho=600, alto=400):
+        if not datos:
+            # validacion de datos en blanco
+            dwg = svgwrite.Drawing('grafico.svg', size=(ancho, alto))
+            dwg.add(dwg.text('No hay datos para mostrar', insert=(ancho/2, alto/2),
+                             font_size='20px', text_anchor='middle', fill='#316938'))
+            return dwg.tostring()
+
+        dwg = svgwrite.Drawing('grafico.svg', size=(ancho, alto))
+
+        # grafico
+        margen = 40
+        ancho_grafico = ancho - 2 * margen
+        alto_grafico = alto - 2 * margen
+        ancho_barra = ancho_grafico / len(datos) * 0.8
+        espacio_barra = ancho_grafico / len(datos) * 0.2
+
+        # escalado
+        max_valor = max(valor for _, valor in datos)
+
+        #  eje Y
+        dwg.add(dwg.line(start=(margen, margen), end=(margen, alto - margen), stroke='#316938'))
+
+        #  eje X
+        dwg.add(dwg.line(start=(margen, alto - margen), end=(ancho - margen, alto - margen), stroke='#316938'))
+
+        #  barras y etiquetas
+        for i, (nombre, valor) in enumerate(datos):
+            # Calcular las dimensiones de la barra
+            x = margen + i * (ancho_barra + espacio_barra)
+            y = alto - margen - (valor / max_valor * alto_grafico) if max_valor > 0 else alto - margen
+            altura_barra = alto - margen - y
+
+            # barra
+            dwg.add(dwg.rect(insert=(x, y), size=(ancho_barra, altura_barra), fill='#316938'))
+
+            # etiqueta del eje X (nombre del artículo)
+            dwg.add(dwg.text(nombre, insert=(x + ancho_barra/2, alto - margen + 20),
+                             font_size='12px', text_anchor='middle', fill='#316938'))
+
+            # etiqueta de valor
+            dwg.add(dwg.text(str(valor), insert=(x + ancho_barra/2, y - 5),
+                             font_size='12px', text_anchor='middle', fill='#316938'))
+
+        # título
+        dwg.add(dwg.text('Cantidad de Artículos por Nombre', insert=(ancho/2, 20),
+                         font_size='16px', text_anchor='middle', fill='#316938', font_weight='bold'))
+
+        return dwg.tostring()
+
+    def generar_grafico():
+        resumen = obtener_inventario_total()
+        datos = [(articulo['nombre'], articulo['cantidad']) for articulo in resumen]
+        svg_string = crear_grafico_barras(datos)
+
+        return ft.Image(
+            src=f"data:image/svg+xml,{svg_string}",
+            width=600,
+            height=400,
+            fit=ft.ImageFit.CONTAIN
+        )
     def generar_tabla_resumen():
         filas = []
         resumen = obtener_inventario_total()
@@ -34,23 +94,6 @@ def mostrar_inventario(page):
             )
             filas.append(fila)
         return filas
-
-    def generar_grafico():
-        resumen = obtener_inventario_total()
-        nombres = [articulo['nombre'] for articulo in resumen]
-        cantidades = [articulo['cantidad'] for articulo in resumen]
-
-        fig = go.Figure(data=[go.Bar(x=nombres, y=cantidades, marker_color='#316938')])
-        fig.update_layout(
-            title='Cantidad de Artículos por Nombre',
-            xaxis_title='Artículo',
-            yaxis_title='Cantidad',
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            font=dict(color='#316938')
-        )
-
-        return PlotlyChart(fig, expand=True)
 
     def ir_a_home(e):
         page.go("/home")

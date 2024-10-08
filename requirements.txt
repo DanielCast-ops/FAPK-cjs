@@ -1,2 +1,5 @@
 flet==0.22.*
-bcrypt==4.2.0
+passlib[argon2]
+sqlite3
+datatime
+svgwrite
