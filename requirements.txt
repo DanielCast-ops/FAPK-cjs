@@ -1,5 +1,5 @@
 flet==0.22.*
-passlib[argon2]
+passlib
 sqlite3
 datatime
 svgwrite
