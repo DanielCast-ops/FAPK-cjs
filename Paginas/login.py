@@ -19,7 +19,7 @@ def Vista_login(page):
         # aqui se verifican las credenciales con la base de datos
         if db.verificar_login(username, password):
             message.value = "Login exitoso!"
-            page.go("/")  # Redirigir a la página principal o home
+            page.go("/home")  # Redirigir a la página principal o home
         else:
             message.value = "Nombre de usuario o contraseña incorrectos."
         page.update()

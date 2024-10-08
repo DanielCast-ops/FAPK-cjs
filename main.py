@@ -44,7 +44,7 @@ def main(page: ft.Page):
     page.on_view_pop = go_back
 
     #  inicial como el login
-    page.go("/home")
+    page.go("/login")
 
 # Correr la app
 ft.app(target=main)
