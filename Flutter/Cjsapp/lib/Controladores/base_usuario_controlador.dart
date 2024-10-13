@@ -2,7 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
-import 'package:flutter_dart/Modelos/usuario.dart';
+import 'package:Cjsapp/Modelos/usuario.dart';
 
 class BaseUsuarioControlador {
   static Database? _database;
@@ -66,7 +66,7 @@ class BaseUsuarioControlador {
         where: 'username = ?',
         whereArgs: [username]);
     if (result.isNotEmpty) {
-      return User.fromMap(result.first);
+      return User.fromMap(Map<String, dynamic>.from(result.first));
     }
     return null;
   }
