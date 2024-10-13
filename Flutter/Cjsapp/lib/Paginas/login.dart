@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:Cjsapp/Controladores/base_usuario_controlador.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();  // Quitamos el guion bajo
 }
 
-class _LoginPageState extends State<LoginPage> {
+class LoginPageState extends State<LoginPage> {
   final BaseUsuarioControlador db = BaseUsuarioControlador();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -33,7 +35,87 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    // El resto del método build permanece sin cambios
-    // ...
+    return Scaffold(
+      backgroundColor: const Color(0xFFF0F0F0),
+      body: Center(
+        child: Container(
+          width: 400,
+          padding: const EdgeInsets.all(30),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                'Imagenes/icon.png',
+                width: 150,
+                height: 150,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                "Iniciar Sesión",
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF316938),
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: usernameController,
+                decoration: const InputDecoration(
+                  labelText: "Nombre de usuario",
+                  border: OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF316938)),
+                  ),
+                ),
+                autofocus: true,
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: passwordController,
+                decoration: const InputDecoration (
+                  labelText: "Contraseña",
+                  border: OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF316938)),
+                  ),
+                ),
+                obscureText: true,
+                enableSuggestions: false,
+                autocorrect: false,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: loginLogic,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF316938),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                ),
+                child: const Text("Iniciar Sesión"),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                message,
+                style: TextStyle(color: messageColor),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
