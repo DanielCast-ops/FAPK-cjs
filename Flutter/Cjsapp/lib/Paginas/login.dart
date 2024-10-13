@@ -5,7 +5,7 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  LoginPageState createState() => LoginPageState();  // Quitamos el guion bajo
+  LoginPageState createState() => LoginPageState();
 }
 
 class LoginPageState extends State<LoginPage> {
