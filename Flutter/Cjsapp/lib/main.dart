@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:Cjsapp/Paginas/login.dart';
 //import 'package:Cjsapp/Paginas/servicios.dart';
 //import 'package:Cjsapp/Paginas/estado_servicios.dart';
-//import 'package:Cjsapp/Paginas/home.dart';
+import 'package:Cjsapp/Paginas/home.dart';
 //import 'package:Cjsapp/Paginas/inventario.dart';
 import 'package:Cjsapp/Paginas/usuarios.dart';
 
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login': (context) => const LoginPage(),
-        //'/home': (context) => HomePage(),
+        '/home': (context) => const HomePage(),
         //'/articulos': (context) => ArticulosPage(),
         //'/historial': (context) => HistorialPage(),
         //'/servicios': (context) => ServiciosPage(),
