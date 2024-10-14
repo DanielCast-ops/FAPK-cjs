@@ -9,7 +9,9 @@ import 'package:Cjsapp/Paginas/home.dart';
 import 'package:Cjsapp/Paginas/usuarios.dart';
 import 'package:Cjsapp/Controladores/inicializador.dart';
 
+
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Inicializacion.inicializar();
   runApp(const MyApp());
 }
