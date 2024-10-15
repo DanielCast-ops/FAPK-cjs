@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:Cjsapp/Modelos/principal.dart';
 
 class DatabaseController {
   static const _databaseName = "cjs.db";
@@ -110,34 +111,35 @@ class DatabaseController {
   }
   
   // Cargo funciones
-  static Future<int> crearCargo(String cargo) async {
+  static Future<int> crearCargo(Cargo cargo) async {
     final db = await _openDB();
-    return await db.insert('cargos', {'cargo': cargo},
+    return await db.insert('cargos', cargo.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  static Future<Map<String, dynamic>?> obtenerCargo(int idCargo) async {
+  static Future<Cargo?> obtenerCargo(int idCargo) async {
     final db = await _openDB();
     List<Map<String, dynamic>> results = await db.query(
       'cargos',
       where: 'id_cargo = ?',
       whereArgs: [idCargo],
     );
-    return results.isNotEmpty ? results.first : null;
+    return results.isNotEmpty ? Cargo.fromMap(results.first) : null;
   }
 
-  static Future<List<Map<String, dynamic>>> obtenerTodosLosCargos() async {
+  static Future<List<Cargo>> obtenerTodosLosCargos() async {
     final db = await _openDB();
-    return await db.query('cargos');
+    final results = await db.query('cargos');
+    return results.map((map) => Cargo.fromMap(map)).toList();
   }
 
-  static Future<int> actualizarCargo(int idCargo, String nuevoCargo) async {
+  static Future<int> actualizarCargo(Cargo cargo) async {
     final db = await _openDB();
     return await db.update(
       'cargos',
-      {'cargo': nuevoCargo},
+      cargo.toMap(),
       where: 'id_cargo = ?',
-      whereArgs: [idCargo],
+      whereArgs: [cargo.idCargo],
     );
   }
 
@@ -151,34 +153,35 @@ class DatabaseController {
   }
 
   // Cliente funciones
-  static Future<int> crearCliente(String nombre, String telefono) async {
+  static Future<int> crearCliente(Cliente cliente) async {
     final db = await _openDB();
-    return await db.insert('clientes', {'nombre': nombre, 'telefono': telefono},
+    return await db.insert('clientes', cliente.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  static Future<Map<String, dynamic>?> obtenerCliente(int idCliente) async {
+  static Future<Cliente?> obtenerCliente(int idCliente) async {
     final db = await _openDB();
     List<Map<String, dynamic>> results = await db.query(
       'clientes',
       where: 'id_cliente = ?',
       whereArgs: [idCliente],
     );
-    return results.isNotEmpty ? results.first : null;
+    return results.isNotEmpty ? Cliente.fromMap(results.first) : null;
   }
 
-  static Future<List<Map<String, dynamic>>> obtenerTodosLosClientes() async {
+  static Future<List<Cliente>> obtenerTodosLosClientes() async {
     final db = await _openDB();
-    return await db.query('clientes');
+    final results = await db.query('clientes');
+    return results.map((map) => Cliente.fromMap(map)).toList();
   }
 
-  static Future<int> actualizarCliente(int idCliente, String nuevoNombre, String nuevoTelefono) async {
+  static Future<int> actualizarCliente(Cliente cliente) async {
     final db = await _openDB();
     return await db.update(
       'clientes',
-      {'nombre': nuevoNombre, 'telefono': nuevoTelefono},
+      cliente.toMap(),
       where: 'id_cliente = ?',
-      whereArgs: [idCliente],
+      whereArgs: [cliente.idCliente],
     );
   }
 
@@ -192,37 +195,35 @@ class DatabaseController {
   }
 
   // Proveedor funciones
-  static Future<int> crearProveedor(String nombre, String telefono, String tipoDeProductos) async {
+  static Future<int> crearProveedor(Proveedor proveedor) async {
     final db = await _openDB();
-    return await db.insert(
-      'proveedores',
-      {'nombre': nombre, 'telefono': telefono, 'tipo_de_productos': tipoDeProductos},
-      conflictAlgorithm: ConflictAlgorithm.replace
-    );
+    return await db.insert('proveedores', proveedor.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  static Future<Map<String, dynamic>?> obtenerProveedor(int idProveedor) async {
+  static Future<Proveedor?> obtenerProveedor(int idProveedor) async {
     final db = await _openDB();
     List<Map<String, dynamic>> results = await db.query(
       'proveedores',
       where: 'id_proveedor = ?',
       whereArgs: [idProveedor],
     );
-    return results.isNotEmpty ? results.first : null;
+    return results.isNotEmpty ? Proveedor.fromMap(results.first) : null;
   }
 
-  static Future<List<Map<String, dynamic>>> obtenerTodosLosProveedores() async {
+  static Future<List<Proveedor>> obtenerTodosLosProveedores() async {
     final db = await _openDB();
-    return await db.query('proveedores');
+    final results = await db.query('proveedores');
+    return results.map((map) => Proveedor.fromMap(map)).toList();
   }
 
-  static Future<int> actualizarProveedor(int idProveedor, String nuevoNombre, String nuevoTelefono, String nuevoTipoDeProductos) async {
+  static Future<int> actualizarProveedor(Proveedor proveedor) async {
     final db = await _openDB();
     return await db.update(
       'proveedores',
-      {'nombre': nuevoNombre, 'telefono': nuevoTelefono, 'tipo_de_productos': nuevoTipoDeProductos},
+      proveedor.toMap(),
       where: 'id_proveedor = ?',
-      whereArgs: [idProveedor],
+      whereArgs: [proveedor.idProveedor],
     );
   }
 
@@ -236,37 +237,35 @@ class DatabaseController {
   }
 
   // Empleado funciones
-  static Future<int> crearEmpleado(String nombre, int idCargo, String telefono) async {
+  static Future<int> crearEmpleado(Empleado empleado) async {
     final db = await _openDB();
-    return await db.insert(
-      'empleados',
-      {'nombre': nombre, 'id_cargo': idCargo, 'telefono': telefono},
-      conflictAlgorithm: ConflictAlgorithm.replace
-    );
+    return await db.insert('empleados', empleado.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  static Future<Map<String, dynamic>?> obtenerEmpleado(int idPersonal) async {
+  static Future<Empleado?> obtenerEmpleado(int idPersonal) async {
     final db = await _openDB();
     List<Map<String, dynamic>> results = await db.query(
       'empleados',
       where: 'id_personal = ?',
       whereArgs: [idPersonal],
     );
-    return results.isNotEmpty ? results.first : null;
+    return results.isNotEmpty ? Empleado.fromMap(results.first) : null;
   }
 
-  static Future<List<Map<String, dynamic>>> obtenerTodosLosEmpleados() async {
+  static Future<List<Empleado>> obtenerTodosLosEmpleados() async {
     final db = await _openDB();
-    return await db.query('empleados');
+    final results = await db.query('empleados');
+    return results.map((map) => Empleado.fromMap(map)).toList();
   }
 
-  static Future<int> actualizarEmpleado(int idPersonal, String nuevoNombre, int nuevoIdCargo, String nuevoTelefono) async {
+  static Future<int> actualizarEmpleado(Empleado empleado) async {
     final db = await _openDB();
     return await db.update(
       'empleados',
-      {'nombre': nuevoNombre, 'id_cargo': nuevoIdCargo, 'telefono': nuevoTelefono},
+      empleado.toMap(),
       where: 'id_personal = ?',
-      whereArgs: [idPersonal],
+      whereArgs: [empleado.idPersonal],
     );
   }
 
@@ -280,47 +279,45 @@ class DatabaseController {
   }
 
   // Articulo funciones
-  static Future<int> crearArticulo(String nombre, String especificacion, int idProveedor) async {
+  static Future<int> crearArticulo(Articulo articulo) async {
     final db = await _openDB();
-    return await db.insert(
-      'articulos',
-      {'nombre': nombre, 'especificacion': especificacion, 'id_proveedor': idProveedor},
-      conflictAlgorithm: ConflictAlgorithm.replace
-    );
+    return await db.insert('articulos', articulo.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  static Future<Map<String, dynamic>?> obtenerArticulo(int idArticulo) async {
+  static Future<Articulo?> obtenerArticulo(int idArticulo) async {
     final db = await _openDB();
     List<Map<String, dynamic>> results = await db.query(
       'articulos',
       where: 'id_articulo = ?',
       whereArgs: [idArticulo],
     );
-    return results.isNotEmpty ? results.first : null;
+    return results.isNotEmpty ? Articulo.fromMap(results.first) : null;
   }
 
-  static Future<Map<String, dynamic>?> obtenerArticuloPorNombre(String nombreArticulo) async {
+  static Future<Articulo?> obtenerArticuloPorNombre(String nombreArticulo) async {
     final db = await _openDB();
     List<Map<String, dynamic>> results = await db.query(
       'articulos',
       where: 'nombre = ?',
       whereArgs: [nombreArticulo],
     );
-    return results.isNotEmpty ? results.first : null;
+    return results.isNotEmpty ? Articulo.fromMap(results.first) : null;
   }
 
-  static Future<List<Map<String, dynamic>>> obtenerTodosLosArticulos() async {
+  static Future<List<Articulo>> obtenerTodosLosArticulos() async {
     final db = await _openDB();
-    return await db.query('articulos');
+    final results = await db.query('articulos');
+    return results.map((map) => Articulo.fromMap(map)).toList();
   }
 
-  static Future<int> actualizarArticulo(int idArticulo, String nuevoNombre, String nuevaEspecificacion, int nuevoIdProveedor) async {
+  static Future<int> actualizarArticulo(Articulo articulo) async {
     final db = await _openDB();
     return await db.update(
       'articulos',
-      {'nombre': nuevoNombre, 'especificacion': nuevaEspecificacion, 'id_proveedor': nuevoIdProveedor},
+      articulo.toMap(),
       where: 'id_articulo = ?',
-      whereArgs: [idArticulo],
+      whereArgs: [articulo.idArticulo],
     );
   }
 
@@ -334,32 +331,29 @@ class DatabaseController {
   }
 
   // Inventario funciones
-  static Future<int> crearTransaccion(int idArticulo, int idPersonal, int cantidad, String fecha, String? notas) async {
+  static Future<int> crearTransaccion(Inventario inventario) async {
     final db = await _openDB();
-    return await db.insert(
-      'inventario',
-      {'id_articulo': idArticulo, 'id_personal': idPersonal, 'cantidad': cantidad, 'fecha': fecha, 'notas': notas},
-      conflictAlgorithm: ConflictAlgorithm.replace
-    );
+    return await db.insert('inventario', inventario.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  static Future<Map<String, dynamic>?> obtenerTransaccion(int idTransaccion) async {
+  static Future<Inventario?> obtenerTransaccion(int idTransaccion) async {
     final db = await _openDB();
     List<Map<String, dynamic>> results = await db.query(
       'inventario',
       where: 'id_transaccion = ?',
       whereArgs: [idTransaccion],
     );
-    return results.isNotEmpty ? results.first : null;
+    return results.isNotEmpty ? Inventario.fromMap(results.first) : null;
   }
 
-  static Future<int> actualizarTransaccion(int idTransaccion, int nuevoIdArticulo, int nuevoIdPersonal, int nuevaCantidad, String nuevaFecha, String? nuevasNotas) async {
+  static Future<int> actualizarTransaccion(Inventario inventario) async {
     final db = await _openDB();
     return await db.update(
       'inventario',
-      {'id_articulo': nuevoIdArticulo, 'id_personal': nuevoIdPersonal, 'cantidad': nuevaCantidad, 'fecha': nuevaFecha, 'notas': nuevasNotas},
+      inventario.toMap(),
       where: 'id_transaccion = ?',
-      whereArgs: [idTransaccion],
+      whereArgs: [inventario.idTransaccion],
     );
   }
 
@@ -378,47 +372,36 @@ class DatabaseController {
     return result.first['total'] as int? ?? 0;
   }
 
-  static Future<List<Map<String, dynamic>>> obtenerTodosLosMovimientos() async {
+  static Future<List<Inventario>> obtenerTodosLosMovimientos() async {
     final db = await _openDB();
-    return await db.query('inventario', orderBy: 'id_transaccion DESC');
+    final results = await db.query('inventario', orderBy: 'id_transaccion DESC');
+    return results.map((map) => Inventario.fromMap(map)).toList();
   }
 
   // Servicio funciones
-  
-  static Future<int> crearServicio(String nombre, String fecha, String? telefonoExtra, String? detalles, int estadoId, int clienteId, int personalId) async {
+  static Future<int> crearServicio(Servicio servicio) async {
     final db = await _openDB();
-    return await db.insert(
-      'servicios',
-      {
-        'nombre': nombre,
-        'fecha': fecha,
-        'telefono_extra': telefonoExtra,
-        'Detalles': detalles,
-        'estado_id': estadoId,
-        'cliente_id': clienteId,
-        'personal_id': personalId
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace
-    );
+    return await db.insert('servicios', servicio.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  static Future<Map<String, dynamic>?> obtenerServicio(int idServicio) async {
+  static Future<Servicio?> obtenerServicio(int idServicio) async {
     final db = await _openDB();
     List<Map<String, dynamic>> results = await db.query(
       'servicios',
       where: 'id_servicio = ?',
       whereArgs: [idServicio],
     );
-    return results.isNotEmpty ? results.first : null;
+    return results.isNotEmpty ? Servicio.fromMap(results.first) : null;
   }
 
-  static Future<int> actualizarServicio(int idServicio, String nuevoNombre, String nuevaFecha, String? nuevoTelefonoExtra, String? nuevosDetalles, int nuevoEstadoId, int nuevoClienteId, int nuevoIdPersonal) async {
+  static Future<int> actualizarServicio(Servicio servicio) async {
     final db = await _openDB();
     return await db.update(
       'servicios',
-      {'nombre': nuevoNombre, 'fecha': nuevaFecha, 'telefono_extra': nuevoTelefonoExtra, 'Detalles': nuevosDetalles, 'estado_id': nuevoEstadoId, 'cliente_id': nuevoClienteId, 'personal_id': nuevoIdPersonal},
+      servicio.toMap(),
       where: 'id_servicio = ?',
-      whereArgs: [idServicio],
+      whereArgs: [servicio.idServicio],
     );
   }
 
@@ -431,42 +414,44 @@ class DatabaseController {
     );
   }
 
-  static Future<List<Map<String, dynamic>>> obtenerTodosLosServicios() async {
+  static Future<List<Servicio>> obtenerTodosLosServicios() async {
     final db = await _openDB();
-    return await db.query('servicios');
+    final results = await db.query('servicios');
+    return results.map((map) => Servicio.fromMap(map)).toList();
   }
 
   // EstadoServicio funciones
-  static Future<int> crearEstadoServicio(String descripcion) async {
+  static Future<int> crearEstadoServicio(EstadoServicio estadoServicio) async {
     final db = await _openDB();
-    return await db.insert('estado_servicio', {'descripcion': descripcion},
+    return await db.insert('estado_servicio', estadoServicio.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  static Future<Map<String, dynamic>?> obtenerEstadoServicio(int idEstado) async {
+  static Future<EstadoServicio?> obtenerEstadoServicio(int idEstado) async {
     final db = await _openDB();
     List<Map<String, dynamic>> results = await db.query(
       'estado_servicio',
       where: 'id_estado = ?',
       whereArgs: [idEstado],
     );
-    return results.isNotEmpty ? results.first : null;
+    return results.isNotEmpty ? EstadoServicio.fromMap(results.first) : null;
   }
 
-  static Future<List<Map<String, dynamic>>> obtenerTodosLosEstados() async {
+  static Future<List<EstadoServicio>> obtenerTodosLosEstados() async {
     final db = await _openDB();
-    return await db.query('estado_servicio');
+    final results = await db.query('estado_servicio');
+    return results.map((map) => EstadoServicio.fromMap(map)).toList();
   }
 
-  static Future<int> actualizarEstadoServicio(int idEstado, String nuevaDescripcion) async {
-  final db = await _openDB();
-  return await db.update(
-    'estado_servicio',
-    {'descripcion': nuevaDescripcion},
-    where: 'id_estado = ?',
-    whereArgs: [idEstado],
-  );
-}
+  static Future<int> actualizarEstadoServicio(EstadoServicio estadoServicio) async {
+    final db = await _openDB();
+    return await db.update(
+      'estado_servicio',
+      estadoServicio.toMap(),
+      where: 'id_estado = ?',
+      whereArgs: [estadoServicio.idEstado],
+    );
+  }
 
   static Future<int> eliminarEstadoServicio(int idEstado) async {
     final db = await _openDB();

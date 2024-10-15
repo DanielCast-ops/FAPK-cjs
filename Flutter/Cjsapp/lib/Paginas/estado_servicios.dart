@@ -8,7 +8,6 @@ class GestionEstadosServicios extends StatefulWidget {
 }
 
 class _GestionEstadosServiciosState extends State<GestionEstadosServicios> {
-  final EstadoServicioController estadoController = EstadoServicioController();
   EstadoServicio? estadoSeleccionado;
   TextEditingController descripcionController = TextEditingController();
 
@@ -42,7 +41,7 @@ class _GestionEstadosServiciosState extends State<GestionEstadosServicios> {
           ),
           Expanded(
             child: FutureBuilder<List<EstadoServicio>>(
-              future: estadoController.obtenerTodosLosEstados(),
+              future: DatabaseController.obtenerTodosLosEstados(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
@@ -82,10 +81,10 @@ class _GestionEstadosServiciosState extends State<GestionEstadosServicios> {
     );
   }
 
-  void agregarEstado() {
+  void agregarEstado() async {
     if (descripcionController.text.isNotEmpty) {
       final nuevoEstado = EstadoServicio(descripcion: descripcionController.text);
-      estadoController.crearEstadoServicio(nuevoEstado);
+      await DatabaseController.crearEstadoServicio(nuevoEstado);
       descripcionController.clear();
       setState(() {});
     }
@@ -98,17 +97,17 @@ class _GestionEstadosServiciosState extends State<GestionEstadosServicios> {
     });
   }
 
-  void guardarCambios() {
+  void guardarCambios() async {
     if (estadoSeleccionado != null && descripcionController.text.isNotEmpty) {
       final estadoActualizado = estadoSeleccionado!.copyWith(descripcion: descripcionController.text);
-      estadoController.actualizarEstadoServicio(estadoActualizado);
+      await DatabaseController.actualizarEstadoServicio(estadoActualizado);
       limpiarFormulario();
       setState(() {});
     }
   }
 
-  void eliminarEstado(int idEstado) {
-    estadoController.eliminarEstadoServicio(idEstado);
+  void eliminarEstado(int idEstado) async {
+    await DatabaseController.eliminarEstadoServicio(idEstado);
     setState(() {});
   }
 
