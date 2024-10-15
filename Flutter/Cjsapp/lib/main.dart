@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-//import 'package:Cjsapp/Paginas/articulos.dart';
+import 'package:Cjsapp/Paginas/articulos.dart';
 //import 'package:Cjsapp/Paginas/historial.dart';
 import 'package:Cjsapp/Paginas/login.dart';
 import 'package:Cjsapp/Paginas/servicios.dart';
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginPage(),
         '/home': (context) => const HomePage(),
-        //'/articulos': (context) => ArticulosPage(),
+        '/articulos': (context) => AdministracionArticulos(),
         //'/historial': (context) => HistorialPage(),
         '/servicios': (context) => AdministracionServicios(),
         '/estado_servicios': (context) => GestionEstadosServicios(),
