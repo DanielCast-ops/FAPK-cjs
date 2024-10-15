@@ -6,10 +6,10 @@ class HistorialInventario extends StatefulWidget {
   const HistorialInventario({super.key});
 
   @override
-  _HistorialInventarioState createState() => _HistorialInventarioState();
+  HistorialInventarioState createState() => HistorialInventarioState();
 }
 
-class _HistorialInventarioState extends State<HistorialInventario> {
+class HistorialInventarioState extends State<HistorialInventario> {
   final _formKey = GlobalKey<FormState>();
   
   final cantidadController = TextEditingController();
