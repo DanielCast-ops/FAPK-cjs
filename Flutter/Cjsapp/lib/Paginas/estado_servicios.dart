@@ -3,6 +3,8 @@ import 'package:Cjsapp/Modelos/principal.dart';
 import 'package:Cjsapp/Controladores/base_principal_controlador.dart';
 
 class GestionEstadosServicios extends StatefulWidget {
+  const GestionEstadosServicios({super.key});
+
   @override
   _GestionEstadosServiciosState createState() => _GestionEstadosServiciosState();
 }
@@ -15,27 +17,27 @@ class _GestionEstadosServiciosState extends State<GestionEstadosServicios> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Gestión de Estados de Servicios"),
+        title: const Text("Gestión de Estados de Servicios"),
       ),
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: TextField(
               controller: descripcionController,
-              decoration: InputDecoration(labelText: "Descripción del Estado"),
+              decoration: const InputDecoration(labelText: "Descripción del Estado"),
             ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
-                child: Text("Agregar Estado"),
                 onPressed: agregarEstado,
+                child: Text("Agregar Estado"),
               ),
               ElevatedButton(
-                child: Text("Guardar Cambios"),
                 onPressed: estadoSeleccionado != null ? guardarCambios : null,
+                child: Text("Guardar Cambios"),
               ),
             ],
           ),
@@ -44,11 +46,11 @@ class _GestionEstadosServiciosState extends State<GestionEstadosServicios> {
               future: DatabaseController.obtenerTodosLosEstados(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text("Error: ${snapshot.error}"));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text("No hay estados registrados"));
+                  return const Center(child: Text("No hay estados registrados"));
                 } else {
                   return ListView.builder(
                     itemCount: snapshot.data!.length,
@@ -60,11 +62,11 @@ class _GestionEstadosServiciosState extends State<GestionEstadosServicios> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: Icon(Icons.edit),
+                              icon: const Icon(Icons.edit),
                               onPressed: () => editarEstado(estado),
                             ),
                             IconButton(
-                              icon: Icon(Icons.delete),
+                              icon: const Icon(Icons.delete),
                               onPressed: () => eliminarEstado(estado.idEstado!),
                             ),
                           ],

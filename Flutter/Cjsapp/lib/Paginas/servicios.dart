@@ -4,6 +4,8 @@ import 'package:Cjsapp/Modelos/principal.dart';
 import 'package:Cjsapp/Controladores/base_principal_controlador.dart';
 
 class AdministracionServicios extends StatefulWidget {
+  const AdministracionServicios({super.key});
+
   @override
   _AdministracionServiciosState createState() => _AdministracionServiciosState();
 }
@@ -43,15 +45,15 @@ class _AdministracionServiciosState extends State<AdministracionServicios> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Administración de Servicios"),
-        backgroundColor: Color(0xFF316938),
+        title: const Text("Administración de Servicios"),
+        backgroundColor: const Color(0xFF316938),
         actions: [
           IconButton(
-            icon: Icon(Icons.home),
+            icon: const Icon(Icons.home),
             onPressed: () => Navigator.pushNamed(context, '/home'),
           ),
           IconButton(
-            icon: Icon(Icons.settings),
+            icon: const Icon(Icons.settings),
             onPressed: () => Navigator.pushNamed(context, '/estado_servicios'),
           ),
         ],
@@ -60,14 +62,14 @@ class _AdministracionServiciosState extends State<AdministracionServicios> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Form(
                 key: _formKey,
                 child: Column(
                   children: [
                     TextFormField(
                       controller: nombreController,
-                      decoration: InputDecoration(labelText: "Nombre del Servicio"),
+                      decoration: const InputDecoration(labelText: "Nombre del Servicio"),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Por favor ingrese un nombre';
@@ -77,7 +79,7 @@ class _AdministracionServiciosState extends State<AdministracionServicios> {
                     ),
                     TextFormField(
                       controller: fechaController,
-                      decoration: InputDecoration(labelText: "Fecha (YYYY-MM-DD)"),
+                      decoration: const InputDecoration(labelText: "Fecha (YYYY-MM-DD)"),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Por favor ingrese una fecha';
@@ -88,11 +90,11 @@ class _AdministracionServiciosState extends State<AdministracionServicios> {
                     ),
                     TextFormField(
                       controller: telefonoController,
-                      decoration: InputDecoration(labelText: "Teléfono Extra"),
+                      decoration: const InputDecoration(labelText: "Teléfono Extra"),
                     ),
                     TextFormField(
                       controller: detallesController,
-                      decoration: InputDecoration(labelText: "Detalles del Servicio"),
+                      decoration: const InputDecoration(labelText: "Detalles del Servicio"),
                     ),
                     DropdownButtonFormField<int>(
                       value: estadoSeleccionado,
@@ -107,7 +109,7 @@ class _AdministracionServiciosState extends State<AdministracionServicios> {
                           estadoSeleccionado = value;
                         });
                       },
-                      decoration: InputDecoration(labelText: "Estado del Servicio"),
+                      decoration: const InputDecoration(labelText: "Estado del Servicio"),
                       validator: (value) {
                         if (value == null) {
                           return 'Por favor seleccione un estado';
@@ -128,7 +130,7 @@ class _AdministracionServiciosState extends State<AdministracionServicios> {
                           clienteSeleccionado = value;
                         });
                       },
-                      decoration: InputDecoration(labelText: "Cliente"),
+                      decoration: const InputDecoration(labelText: "Cliente"),
                       validator: (value) {
                         if (value == null) {
                           return 'Por favor seleccione un cliente';
@@ -149,7 +151,7 @@ class _AdministracionServiciosState extends State<AdministracionServicios> {
                           empleadoSeleccionado = value;
                         });
                       },
-                      decoration: InputDecoration(labelText: "Empleado"),
+                      decoration: const InputDecoration(labelText: "Empleado"),
                       validator: (value) {
                         if (value == null) {
                           return 'Por favor seleccione un empleado';
@@ -157,35 +159,35 @@ class _AdministracionServiciosState extends State<AdministracionServicios> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
-                      child: Text(modoEdicion ? "Actualizar Servicio" : "Agregar Servicio"),
                       onPressed: guardarOActualizarServicio,
+                      child: Text(modoEdicion ? "Actualizar Servicio" : "Agregar Servicio"),
                     ),
                   ],
                 ),
               ),
             ),
-            Divider(),
-            Text("Servicios Registrados", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const Divider(),
+            const Text("Servicios Registrados", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             FutureBuilder<List<Servicio>>(
               future: DatabaseController.obtenerTodosLosServicios(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text("Error: ${snapshot.error}"));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text("No hay servicios registrados"));
+                  return const Center(child: Text("No hay servicios registrados"));
                 } else {
                   return ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       final servicio = snapshot.data![index];
                       return Card(
-                        margin: EdgeInsets.all(8),
+                        margin: const EdgeInsets.all(8),
                         child: ListTile(
                           title: Text(servicio.nombre),
                           subtitle: Text("Fecha: ${DateFormat('yyyy-MM-dd').format(servicio.fecha)} | Detalles: ${servicio.detalles ?? ''}"),
@@ -193,11 +195,11 @@ class _AdministracionServiciosState extends State<AdministracionServicios> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: Icon(Icons.edit),
+                                icon: const Icon(Icons.edit),
                                 onPressed: () => editarServicio(servicio),
                               ),
                               IconButton(
-                                icon: Icon(Icons.delete),
+                                icon: const Icon(Icons.delete),
                                 onPressed: () => eliminarServicio(servicio.idServicio!),
                               ),
                             ],

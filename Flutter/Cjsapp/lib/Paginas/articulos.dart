@@ -3,6 +3,8 @@ import 'package:Cjsapp/Modelos/principal.dart';
 import 'package:Cjsapp/Controladores/base_principal_controlador.dart';
 
 class AdministracionArticulos extends StatefulWidget {
+  const AdministracionArticulos({super.key});
+
   @override
   _AdministracionArticulosState createState() => _AdministracionArticulosState();
 }
@@ -31,24 +33,24 @@ class _AdministracionArticulosState extends State<AdministracionArticulos> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Administración de Artículos"),
-        backgroundColor: Color(0xFF316938),
+        title: const Text("Administración de Artículos"),
+        backgroundColor: const Color(0xFF316938),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Registro de Artículo", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-              SizedBox(height: 20),
+              const Text("Registro de Artículo", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 20),
               Form(
                 key: _formKey,
                 child: Column(
                   children: [
                     TextFormField(
                       controller: nombreController,
-                      decoration: InputDecoration(labelText: "Nombre del Artículo"),
+                      decoration: const InputDecoration(labelText: "Nombre del Artículo"),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Por favor ingrese un nombre';
@@ -58,7 +60,7 @@ class _AdministracionArticulosState extends State<AdministracionArticulos> {
                     ),
                     TextFormField(
                       controller: especificacionController,
-                      decoration: InputDecoration(labelText: "Especificación"),
+                      decoration: const InputDecoration(labelText: "Especificación"),
                     ),
                     DropdownButtonFormField<int>(
                       value: proveedorSeleccionado,
@@ -73,7 +75,7 @@ class _AdministracionArticulosState extends State<AdministracionArticulos> {
                           proveedorSeleccionado = value;
                         });
                       },
-                      decoration: InputDecoration(labelText: "Proveedor"),
+                      decoration: const InputDecoration(labelText: "Proveedor"),
                       validator: (value) {
                         if (value == null) {
                           return 'Por favor seleccione un proveedor';
@@ -81,28 +83,28 @@ class _AdministracionArticulosState extends State<AdministracionArticulos> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
-                      child: Text("Registrar Artículo"),
                       onPressed: agregarArticulo,
+                      child: Text("Registrar Artículo"),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 30),
-              Text("Lista de Artículos Registrados", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              SizedBox(height: 10),
-              Container(
+              const SizedBox(height: 30),
+              const Text("Lista de Artículos Registrados", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 10),
+              SizedBox(
                 height: 300,
                 child: FutureBuilder<List<Articulo>>(
                   future: DatabaseController.obtenerTodosLosArticulos(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Center(child: Text("Error: ${snapshot.error}"));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(child: Text("No hay artículos registrados"));
+                      return const Center(child: Text("No hay artículos registrados"));
                     } else {
                       return ListView.builder(
                         itemCount: snapshot.data!.length,
@@ -112,7 +114,7 @@ class _AdministracionArticulosState extends State<AdministracionArticulos> {
                             title: Text(articulo.nombre),
                             subtitle: Text(articulo.especificacion),
                             trailing: IconButton(
-                              icon: Icon(Icons.delete),
+                              icon: const Icon(Icons.delete),
                               onPressed: () => eliminarArticulo(articulo.idArticulo!),
                             ),
                           );
@@ -140,7 +142,7 @@ class _AdministracionArticulosState extends State<AdministracionArticulos> {
       try {
         await DatabaseController.crearArticulo(nuevoArticulo);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Artículo registrado exitosamente.")),
+          const SnackBar(content: Text("Artículo registrado exitosamente.")),
         );
         nombreController.clear();
         especificacionController.clear();
@@ -148,7 +150,7 @@ class _AdministracionArticulosState extends State<AdministracionArticulos> {
         setState(() {});
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error: No se pudo registrar el artículo.")),
+          const SnackBar(content: Text("Error: No se pudo registrar el artículo.")),
         );
       }
     }
@@ -158,12 +160,12 @@ class _AdministracionArticulosState extends State<AdministracionArticulos> {
     try {
       await DatabaseController.eliminarArticulo(idArticulo);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Artículo eliminado exitosamente.")),
+        const SnackBar(content: Text("Artículo eliminado exitosamente.")),
       );
       setState(() {});
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error al eliminar el artículo.")),
+        const SnackBar(content: Text("Error al eliminar el artículo.")),
       );
     }
   }
