@@ -9,9 +9,7 @@ class AdministracionServicios extends StatefulWidget {
 }
 
 class _AdministracionServiciosState extends State<AdministracionServicios> {
-  final ServicioController servicioController = ServicioController();
-  final EstadoServicioController estadoController = EstadoServicioController();
-  
+  final _formKey = GlobalKey<FormState>();
   bool modoEdicion = false;
   Servicio? servicioActual;
   
@@ -20,18 +18,24 @@ class _AdministracionServiciosState extends State<AdministracionServicios> {
   final telefonoController = TextEditingController();
   final detallesController = TextEditingController();
   int? estadoSeleccionado;
+  int? clienteSeleccionado;
+  int? empleadoSeleccionado;
   
   List<EstadoServicio> estados = [];
+  List<Cliente> clientes = [];
+  List<Empleado> empleados = [];
 
   @override
   void initState() {
     super.initState();
-    cargarEstados();
+    cargarDatos();
     fechaController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
   }
 
-  void cargarEstados() async {
-    estados = await estadoController.obtenerTodosLosEstados();
+  void cargarDatos() async {
+    estados = await DatabaseController.obtenerTodosLosEstados();
+    clientes = await DatabaseController.obtenerTodosLosClientes();
+    empleados = await DatabaseController.obtenerTodosLosEmpleados();
     setState(() {});
   }
 
@@ -58,15 +62,29 @@ class _AdministracionServiciosState extends State<AdministracionServicios> {
             Padding(
               padding: EdgeInsets.all(16.0),
               child: Form(
+                key: _formKey,
                 child: Column(
                   children: [
                     TextFormField(
                       controller: nombreController,
                       decoration: InputDecoration(labelText: "Nombre del Servicio"),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor ingrese un nombre';
+                        }
+                        return null;
+                      },
                     ),
                     TextFormField(
                       controller: fechaController,
                       decoration: InputDecoration(labelText: "Fecha (YYYY-MM-DD)"),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor ingrese una fecha';
+                        }
+                        // Add date format validation if needed
+                        return null;
+                      },
                     ),
                     TextFormField(
                       controller: telefonoController,
@@ -90,6 +108,54 @@ class _AdministracionServiciosState extends State<AdministracionServicios> {
                         });
                       },
                       decoration: InputDecoration(labelText: "Estado del Servicio"),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Por favor seleccione un estado';
+                        }
+                        return null;
+                      },
+                    ),
+                    DropdownButtonFormField<int>(
+                      value: clienteSeleccionado,
+                      items: clientes.map((cliente) {
+                        return DropdownMenuItem(
+                          value: cliente.idCliente,
+                          child: Text(cliente.nombre),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          clienteSeleccionado = value;
+                        });
+                      },
+                      decoration: InputDecoration(labelText: "Cliente"),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Por favor seleccione un cliente';
+                        }
+                        return null;
+                      },
+                    ),
+                    DropdownButtonFormField<int>(
+                      value: empleadoSeleccionado,
+                      items: empleados.map((empleado) {
+                        return DropdownMenuItem(
+                          value: empleado.idPersonal,
+                          child: Text(empleado.nombre),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          empleadoSeleccionado = value;
+                        });
+                      },
+                      decoration: InputDecoration(labelText: "Empleado"),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Por favor seleccione un empleado';
+                        }
+                        return null;
+                      },
                     ),
                     SizedBox(height: 20),
                     ElevatedButton(
@@ -103,14 +169,14 @@ class _AdministracionServiciosState extends State<AdministracionServicios> {
             Divider(),
             Text("Servicios Registrados", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             FutureBuilder<List<Servicio>>(
-              future: servicioController.obtenerTodosLosServicios(),
+              future: DatabaseController.obtenerTodosLosServicios(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return Text("Error: ${snapshot.error}");
+                  return Center(child: Text("Error: ${snapshot.error}"));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Text("No hay servicios registrados");
+                  return Center(child: Text("No hay servicios registrados"));
                 } else {
                   return ListView.builder(
                     shrinkWrap: true,
@@ -122,7 +188,7 @@ class _AdministracionServiciosState extends State<AdministracionServicios> {
                         margin: EdgeInsets.all(8),
                         child: ListTile(
                           title: Text(servicio.nombre),
-                          subtitle: Text("Fecha: ${servicio.fecha} | Detalles: ${servicio.detalles ?? ''}"),
+                          subtitle: Text("Fecha: ${DateFormat('yyyy-MM-dd').format(servicio.fecha)} | Detalles: ${servicio.detalles ?? ''}"),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -150,43 +216,42 @@ class _AdministracionServiciosState extends State<AdministracionServicios> {
   }
 
   void guardarOActualizarServicio() {
-    final nombre = nombreController.text;
-    final fecha = fechaController.text;
-    final telefonoExtra = telefonoController.text;
-    final detalles = detallesController.text;
-    final estadoId = estadoSeleccionado!;
-    const clienteId = 1; // Valor fijo como en el código original
-    const personalId = 1; // Valor fijo como en el código original
+    if (_formKey.currentState!.validate()) {
+      final nombre = nombreController.text;
+      final fecha = DateTime.parse(fechaController.text);
+      final telefonoExtra = telefonoController.text;
+      final detalles = detallesController.text;
 
-    if (modoEdicion && servicioActual != null) {
-      final servicioActualizado = servicioActual!.copyWith(
-        nombre: nombre,
-        fecha: DateTime.parse(fecha),
-        telefonoExtra: telefonoExtra,
-        detalles: detalles,
-        estadoId: estadoId,
-        clienteId: clienteId,
-        personalId: personalId,
-      );
-      servicioController.actualizarServicio(servicioActualizado);
-    } else {
-      final nuevoServicio = Servicio(
-        nombre: nombre,
-        fecha: DateTime.parse(fecha),
-        telefonoExtra: telefonoExtra,
-        detalles: detalles,
-        estadoId: estadoId,
-        clienteId: clienteId,
-        personalId: personalId,
-      );
-      servicioController.crearServicio(nuevoServicio);
+      if (modoEdicion && servicioActual != null) {
+        final servicioActualizado = servicioActual!.copyWith(
+          nombre: nombre,
+          fecha: fecha,
+          telefonoExtra: telefonoExtra,
+          detalles: detalles,
+          estadoId: estadoSeleccionado!,
+          clienteId: clienteSeleccionado!,
+          personalId: empleadoSeleccionado!,
+        );
+        DatabaseController.actualizarServicio(servicioActualizado);
+      } else {
+        final nuevoServicio = Servicio(
+          nombre: nombre,
+          fecha: fecha,
+          telefonoExtra: telefonoExtra,
+          detalles: detalles,
+          estadoId: estadoSeleccionado!,
+          clienteId: clienteSeleccionado!,
+          personalId: empleadoSeleccionado!,
+        );
+        DatabaseController.crearServicio(nuevoServicio);
+      }
+
+      limpiarFormulario();
+      setState(() {
+        modoEdicion = false;
+        servicioActual = null;
+      });
     }
-
-    limpiarFormulario();
-    setState(() {
-      modoEdicion = false;
-      servicioActual = null;
-    });
   }
 
   void editarServicio(Servicio servicio) {
@@ -198,11 +263,13 @@ class _AdministracionServiciosState extends State<AdministracionServicios> {
       telefonoController.text = servicio.telefonoExtra ?? '';
       detallesController.text = servicio.detalles ?? '';
       estadoSeleccionado = servicio.estadoId;
+      clienteSeleccionado = servicio.clienteId;
+      empleadoSeleccionado = servicio.personalId;
     });
   }
 
-  void eliminarServicio(int idServicio) {
-    servicioController.eliminarServicio(idServicio);
+  void eliminarServicio(int idServicio) async {
+    await DatabaseController.eliminarServicio(idServicio);
     setState(() {});
   }
 
@@ -212,6 +279,8 @@ class _AdministracionServiciosState extends State<AdministracionServicios> {
     telefonoController.clear();
     detallesController.clear();
     estadoSeleccionado = null;
+    clienteSeleccionado = null;
+    empleadoSeleccionado = null;
   }
 
   @override

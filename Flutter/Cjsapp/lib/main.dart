@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 //import 'package:Cjsapp/Paginas/articulos.dart';
 //import 'package:Cjsapp/Paginas/historial.dart';
 import 'package:Cjsapp/Paginas/login.dart';
-//import 'package:Cjsapp/Paginas/servicios.dart';
-//import 'package:Cjsapp/Paginas/estado_servicios.dart';
+import 'package:Cjsapp/Paginas/servicios.dart';
+import 'package:Cjsapp/Paginas/estado_servicios.dart';
 import 'package:Cjsapp/Paginas/home.dart';
 //import 'package:Cjsapp/Paginas/inventario.dart';
 import 'package:Cjsapp/Paginas/usuarios.dart';
@@ -48,8 +48,8 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const HomePage(),
         //'/articulos': (context) => ArticulosPage(),
         //'/historial': (context) => HistorialPage(),
-        //'/servicios': (context) => ServiciosPage(),
-        //'/estado_servicios': (context) => EstadoServiciosPage(),
+        '/servicios': (context) => AdministracionServicios(),
+        '/estado_servicios': (context) => GestionEstadosServicios(),
         //'/inventario': (context) => InventarioPage(),
         '/usuarios': (context) => const UsersPage(),
       },
