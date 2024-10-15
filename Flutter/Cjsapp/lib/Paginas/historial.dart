@@ -94,11 +94,11 @@ class HistorialInventarioState extends State<HistorialInventario> {
                       children: [
                         ElevatedButton(
                           onPressed: registrarMovimiento,
-                          child: Text("Registrar Movimiento"),
+                          child: const Text("Registrar Movimiento"),
                         ),
                         ElevatedButton(
                           onPressed: transaccionSeleccionada != null ? guardarCambios : null,
-                          child: Text("Guardar Cambios"),
+                          child: const Text("Guardar Cambios"),
                         ),
                       ],
                     ),

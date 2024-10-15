@@ -46,11 +46,11 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginPage(),
         '/home': (context) => const HomePage(),
-        '/articulos': (context) => AdministracionArticulos(),
+        '/articulos': (context) => const AdministracionArticulos(),
         '/historial': (context) => const HistorialInventario(),
         '/servicios': (context) => const AdministracionServicios(),
-        '/estado_servicios': (context) => GestionEstadosServicios(),
-        '/inventario': (context) => const Inventario(),
+        '/estado_servicios': (context) => const GestionEstadosServicios(),
+        '/inventario': (context) => Inventario(),
         '/usuarios': (context) => const UsersPage(),
       },
     );

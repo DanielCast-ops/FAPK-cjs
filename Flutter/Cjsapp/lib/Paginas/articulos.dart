@@ -86,7 +86,7 @@ class _AdministracionArticulosState extends State<AdministracionArticulos> {
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: agregarArticulo,
-                      child: Text("Registrar Artículo"),
+                      child: const Text("Registrar Artículo"),
                     ),
                   ],
                 ),

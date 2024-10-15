@@ -4,13 +4,11 @@ import 'package:Cjsapp/Controladores/base_principal_controlador.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class Inventario extends StatefulWidget {
-  const Inventario({super.key});
-
   @override
-  InventarioState createState() => InventarioState();
+  _InventarioState createState() => _InventarioState();
 }
 
-class InventarioState extends State<Inventario> {
+class _InventarioState extends State<Inventario> {
   List<ResumenInventario> resumenInventario = [];
 
   @override
@@ -36,32 +34,32 @@ class InventarioState extends State<Inventario> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Inventario"),
-        backgroundColor: const Color(0xFF316938),
+        title: Text("Inventario"),
+        backgroundColor: Color(0xFF316938),
         actions: [
           IconButton(
-            icon: const Icon(Icons.home),
+            icon: Icon(Icons.home),
             onPressed: () => Navigator.pushReplacementNamed(context, '/home'),
           ),
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: Icon(Icons.add),
             onPressed: () => Navigator.pushNamed(context, '/articulos'),
           ),
           IconButton(
-            icon: const Icon(Icons.history),
+            icon: Icon(Icons.history),
             onPressed: () => Navigator.pushNamed(context, '/historial'),
           ),
         ],
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Resumen de Inventario", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF316938))),
-              const SizedBox(height: 20),
-              SizedBox(
+              Text("Resumen de Inventario", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF316938))),
+              SizedBox(height: 20),
+              Container(
                 height: 300,
                 child: resumenInventario.isNotEmpty
                     ? BarChart(
@@ -70,23 +68,20 @@ class InventarioState extends State<Inventario> {
                           maxY: resumenInventario.map((e) => e.cantidad.toDouble()).reduce((a, b) => a > b ? a : b),
                           barTouchData: BarTouchData(enabled: false),
                           titlesData: FlTitlesData(
-                            show: true,
-                            bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                showTitles: true,
-                                getTitlesWidget: (value, meta) {
-                                  return Text(
-                                    resumenInventario[value.toInt()].nombre,
-                                    style: const TextStyle(color: Color(0xFF316938), fontWeight: FontWeight.bold, fontSize: 14),
-                                  ); 
-                                },
-                                reservedSize: 40,
-                              ),
+                            bottomTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 40,
+                              getTitles: (value) {
+                                int index = value.toInt();
+                                return index < resumenInventario.length ? resumenInventario[index].nombre : '';
+                              },
                             ),
-                            leftTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                showTitles: true,
-                              ),
+                            leftTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 40,
+                              getTitles: (value) {
+                                return value.toString();
+                              },
                             ),
                           ),
                           borderData: FlBorderData(show: false),
@@ -95,19 +90,19 @@ class InventarioState extends State<Inventario> {
                               x: entry.key,
                               barRods: [
                                 BarChartRodData(
-                                  toY: entry.value.cantidad.toDouble(), 
-                                  color: const Color(0xFF316938), 
+                                  y: entry.value.cantidad.toDouble(),
+                                  colors: [Color(0xFF316938)],
                                 ),
                               ],
                             );
                           }).toList(),
                         ),
                       )
-                    : const Center(child: Text("No hay datos para mostrar")),
+                    : Center(child: Text("No hay datos para mostrar")),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               DataTable(
-                columns: const [
+                columns: [
                   DataColumn(label: Text('Artículo', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF316938)))),
                   DataColumn(label: Text('Cantidad', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF316938)))),
                   DataColumn(label: Text('Especificación', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF316938)))),

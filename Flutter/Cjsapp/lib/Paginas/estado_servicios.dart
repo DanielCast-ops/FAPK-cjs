@@ -33,11 +33,11 @@ class _GestionEstadosServiciosState extends State<GestionEstadosServicios> {
             children: [
               ElevatedButton(
                 onPressed: agregarEstado,
-                child: Text("Agregar Estado"),
+                child: const Text("Agregar Estado"),
               ),
               ElevatedButton(
                 onPressed: estadoSeleccionado != null ? guardarCambios : null,
-                child: Text("Guardar Cambios"),
+                child: const Text("Guardar Cambios"),
               ),
             ],
           ),
