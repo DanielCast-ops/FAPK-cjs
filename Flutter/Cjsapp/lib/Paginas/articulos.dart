@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:Cjsapp/Modelos/principal.dart';
-import 'package:Cjsapp/Controladores/base_principal_controlador.dart';
+import 'package:cjsapp/Modelos/principal.dart';
+import 'package:cjsapp/Controladores/base_principal_controlador.dart';
 
 class AdministracionArticulos extends StatefulWidget {
   const AdministracionArticulos({super.key});

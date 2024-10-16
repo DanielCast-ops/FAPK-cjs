@@ -3,7 +3,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
-import 'package:Cjsapp/Modelos/usuario.dart';
+import 'package:cjsapp/Modelos/usuario.dart';
 
 class BaseUsuarioControlador {
   static Database? _database;

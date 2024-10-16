@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:Cjsapp/Controladores/base_usuario_controlador.dart';
-import 'package:Cjsapp/Modelos/usuario.dart';
+import 'package:cjsapp/Controladores/base_usuario_controlador.dart';
+import 'package:cjsapp/Modelos/usuario.dart';
 
 class UsersPage extends StatefulWidget {
   const UsersPage({super.key});

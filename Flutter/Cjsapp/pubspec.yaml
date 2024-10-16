@@ -1,4 +1,4 @@
-name: Cjsapp
+name: cjsapp
 description: "Poyecto para Cjs technology"
 publish_to: 'none'
 version: 1.0.0+1
@@ -26,8 +26,8 @@ flutter:
   uses-material-design: true
 
   # Uncomment and add any assets you need
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - lib/Imagenes/
   #   - images/a_dot_ham.jpeg
 
   # Uncomment and add any fonts you need

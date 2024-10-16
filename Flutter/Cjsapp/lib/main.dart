@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:Cjsapp/Paginas/articulos.dart';
-import 'package:Cjsapp/Paginas/historial.dart';
-import 'package:Cjsapp/Paginas/login.dart';
-import 'package:Cjsapp/Paginas/servicios.dart';
-import 'package:Cjsapp/Paginas/estado_servicios.dart';
-import 'package:Cjsapp/Paginas/home.dart';
-import 'package:Cjsapp/Paginas/inventario.dart';
-import 'package:Cjsapp/Paginas/usuarios.dart';
-import 'package:Cjsapp/Controladores/inicializador.dart';
+import 'package:cjsapp/Paginas/articulos.dart';
+import 'package:cjsapp/Paginas/historial.dart';
+import 'package:cjsapp/Paginas/login.dart';
+import 'package:cjsapp/Paginas/servicios.dart';
+import 'package:cjsapp/Paginas/estado_servicios.dart';
+import 'package:cjsapp/Paginas/home.dart';
+import 'package:cjsapp/Paginas/inventario.dart';
+import 'package:cjsapp/Paginas/usuarios.dart';
+import 'package:cjsapp/Controladores/inicializador.dart';
 
 
 void main() async {

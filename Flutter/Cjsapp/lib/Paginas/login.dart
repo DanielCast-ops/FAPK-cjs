@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:Cjsapp/Controladores/base_usuario_controlador.dart';
+import 'package:cjsapp/Controladores/base_usuario_controlador.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -57,7 +57,7 @@ class LoginPageState extends State<LoginPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Image.asset(
-                'Imagenes/icon.png',
+                'lib/Imagenes/icon.png',
                 width: 150,
                 height: 150,
                 fit: BoxFit.contain,

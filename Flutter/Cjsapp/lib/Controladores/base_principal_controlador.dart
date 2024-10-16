@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:Cjsapp/Modelos/principal.dart';
+import 'package:cjsapp/Modelos/principal.dart';
 
 class DatabaseController {
   static const _databaseName = "cjs.db";
