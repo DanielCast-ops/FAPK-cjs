@@ -58,8 +58,8 @@ class LoginPageState extends State<LoginPage> {
             children: [
               Image.asset(
                 'lib/Imagenes/icon.png',
-                width: 150,
-                height: 150,
+                width: 100,
+                height: 100,
                 fit: BoxFit.contain,
               ),
               const SizedBox(height: 20),
