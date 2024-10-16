@@ -78,8 +78,8 @@ class HistorialInventarioState extends State<HistorialInventario> {
                         if (value == null || value.isEmpty) {
                           return 'Por favor ingrese una cantidad';
                         }
-                        if (int.tryParse(value) == null || int.parse(value) <= 0) {
-                          return 'Por favor ingrese un número válido mayor que cero';
+                        if (int.tryParse(value) == null || int.parse(value) == 0) {
+                          return 'Por favor ingrese un número válido';
                         }
                         return null;
                       },
